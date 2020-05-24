@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <link rel="stylesheet" type="text/css" href="checkbox.css">
+    <title>Calendar</title>
+</head>
+<body>
+    <header>
+        Calendar
+    </header>
+ 
+    <main>
+        <input type="checkbox" id="check-menu" style="display: none;"/>
+        <div id="barra">
+            <label for="check-menu">Exit</label>
+            <h2 id="task-title"></h2>
+    
+            <form id="tasks">
+                
+            </form>
+    
+            <div id="create-tasks">
+                <p>Criar uma tarefa:</p>
+                <form id="create">
+                    <textarea maxlength="120" id="textarea"></textarea>
+                    <button type="submit" id="create-task">Criar</button>
+                </form>
+            </div>
+        </div>
+    
+        <div id="container">
+            <h1></h1>
+
+            <ul id="list">               
+                <li class="days">Dom</li> 
+                <li class="days">Seg</li> 
+                <li class="days">Ter</li> 
+                <li class="days">Quar</li> 
+                <li class="days">Quin</li> 
+                <li class="days">Sex</li> 
+                <li class="days">Sab</li>                   
+            </ul>
+        </div>
+    </main>
+
+    <script src="../bundle.js"></script>
+</body>
+</html>

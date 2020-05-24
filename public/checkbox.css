@@ -1,0 +1,83 @@
+/* CHECKBOX STYLE */
+
+#tasks *{
+    margin: 0;
+    padding: 0;
+    outline: none;
+    box-sizing: border-box;
+    color: whitesmoke;
+}
+
+#tasks input[type=checkbox] + label {
+    display: block;
+    margin: 0.2em;
+    cursor: pointer;
+    padding: 0.1em;
+    font-size: 16px;
+}
+
+#tasks input[type=checkbox] {
+    display: none;
+}
+
+#tasks input[type=checkbox] + label:before {
+    content:"\2714";
+    border: 2px solid yellowgreen;
+    border-radius: 0.2em;
+    display:inline-block;
+    width: 1em;
+    min-width: 18px;
+    height: 1em;
+    padding-left: 0.2em;
+    padding-bottom: 0.3em;
+    margin-right: 0.2em;
+    vertical-align: bottom;
+    color: transparent;
+    transition: 0.3s;
+}
+
+#tasks input[type=checkbox] + label:active:before {
+    transform: scale(0.1);
+}
+
+#tasks input[type=checkbox]:checked + label:before {
+    background: yellowgreen;
+    border-color: yellowgreen;
+    color: #fff;
+}
+
+#tasks input[type=checkbox]:disabled + label:before {
+    transform:scale(1);
+    border-color: #aaa;
+}
+
+#tasks input[type=checkbox]:checked + label:before {
+    transform:scale(1);
+    background-color: yellowgreen;
+    border-color: yellowgreen;
+}
+
+#barra #tasks label {
+    margin: 8px;
+    padding: 4px;
+    display: grid;
+    grid-template-areas: "t g";
+    grid-template-columns: 1fr 8fr;
+
+    transition: 0.2s;
+}
+
+#barra #tasks input {
+    grid-area: t;
+}
+
+#barra #tasks label span {
+ grid-area: g;
+ font-size: 18px;
+}
+
+#barra #tasks label:hover {
+    background: #3A0063;
+    border-radius: 4px;
+    transform: scale(1.05);
+}
