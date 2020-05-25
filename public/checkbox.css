@@ -61,18 +61,41 @@
     margin: 8px;
     padding: 4px;
     display: grid;
-    grid-template-areas: "t g";
-    grid-template-columns: 1fr 8fr;
+    grid-template-areas: "check span btn";
+    grid-template-columns: 1fr 4fr 1fr;
+    align-items: center;
 
     transition: 0.2s;
 }
 
 #barra #tasks input {
-    grid-area: t;
+    grid-area: check;
+}
+
+#barra #tasks .excluir {
+    grid-column-start: 1;
+    grid-column-end: 2;
+    grid-area: btn;
+
+   
+    border-radius: 4px;
+    border: none;
+
+    font-weight: bold;
+    font-size: 18px;
+    color: whitesmoke;
+    background: #24003d;
+
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+#barra #tasks .excluir:hover {
+    color: red;
 }
 
 #barra #tasks label span {
- grid-area: g;
+ grid-area: span;
  font-size: 18px;
 }
 

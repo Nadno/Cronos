@@ -10,16 +10,17 @@ const monthTotalDays = (month, year) => {
     }
 }
 
-const monthDays = (date, dayName, monthName) => {
+const monthDays = (date, days, monthName) => {
     const year = date.getFullYear();
     const nMonth = date.getMonth();
     const nDay = date.getDay();
 
 
     const Date = {
+        days,
         nDay,
         nMonth,
-        weekDay: dayName[nDay],
+        weekDay: days[nDay],
         day: date.getDate(),
         month: monthName[nMonth],
         year,
@@ -30,13 +31,11 @@ const monthDays = (date, dayName, monthName) => {
 };
 
 export const indexDay = (days, day) => {
-    let indexDay = [];
-        
     for(let i = 0; i < days.length; i++) {
-        if(days[i].Day === day) indexDay = [days[i], i];
-    }
+        if(days[i].Day === day) return i;
+    }   
 
-    return indexDay;
+    return undefined;
 }
 
 export const calendarGenerator = () => {
