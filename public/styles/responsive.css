@@ -1,0 +1,7 @@
+.calendar-container .days {
+    font-size: 1.2rem;
+}
+
+.calendar-container .month, .before {
+    font-size: 1.4rem;
+}

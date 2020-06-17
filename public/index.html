@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="styles/style.css">
+    <link rel="stylesheet" type="text/css" href="styles/checkbox.css">
+    <link rel="stylesheet" media="(max-width: 900px)"" href="styles/responsive.css">
+    <title>Cronos</title>
+</head>
+<body>
+    <header>
+        Cronos
+    </header>
+ 
+    <main>
+        <section>
+            <div class="menu" data-day="Daily">
+                <span>return</span>
+                <h3 id="menu-title">Tarefas diárias</h3>
+            
+                <form id="render-todo">
+                    <ul class="tasks-container">
+                        
+                    </ul>
+                </form>
+    
+                <div class="create-tasks">
+                    <p>Criar uma tarefa:</p>
+                    
+                    <form id="create-task">
+                        <fieldset>
+                            <textarea maxlength="120" class="textarea"></textarea>
+                            <button type="submit">Criar</button>
+                        </fieldset>
+                    </form>
+                </div>
+            </div>
+        </section>
+    
+        <section class="calendar-container">
+            <h1></h1>
+
+            <ul class="week-days">               
+                <li class="days">Domingo</li> 
+                <li class="days">Segunda</li> 
+                <li class="days">Terça</li> 
+                <li class="days">Quarta</li> 
+                <li class="days">Quinta</li> 
+                <li class="days">Sexta</li> 
+                <li class="days">Sabádo</li>                   
+            </ul>
+
+    
+            <ul class="month-days">
+                
+            </ul>                          
+        </section>
+    </main>
+
+    <script src="../bundle.js"></script>
+</body>
+</html>
