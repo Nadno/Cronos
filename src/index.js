@@ -2,7 +2,12 @@ import { getItems } from './save';
 import menuNavigation, { handleCreateTask, handleDeleteTask, handleCheckTask } from './menu';
 
 const menuElement = document.querySelector('div.menu');
-const data = getItems();
+const data = getItems(true);
+
+document.querySelector('.select-month').onchange = () => {
+    getItems();
+    console.log(Number(document.getElementById('select-month').value));
+};
 
 document.querySelector('ul.month-days').addEventListener('click', function (e) {
     if (e.target.value !== undefined) {
@@ -41,3 +46,5 @@ document.querySelector('#render-todo').addEventListener('click', e => {
         handleDeleteTask(data, indexTask);
     }
 });
+
+console.log(data);

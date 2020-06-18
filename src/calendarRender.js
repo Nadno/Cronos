@@ -1,53 +1,46 @@
-import { dayConstructor, daysMonth } from './components';
+import { dayConstructor } from './components';
+import { monthTotalDays } from './Date';
 
-const firstDay = (day, nDay, totDays) => {
-    if (day > 1) {
-        let first = 0;
+const beforeThisMonth = (first, totalDays) => {
+    for (let beforeFirst = (totalDays - first); beforeFirst < totalDays; beforeFirst++) {
+        let data = {
+            weekDay: 0,
+            monthDay: beforeFirst + 1,
+        };
 
-        for (let i = day; i > 1; i--) {
-            if (nDay > 0) {
-                nDay--;
-            } else { nDay = 6 }
+        const li = dayConstructor(data, 'before');
 
-            first = nDay;
-        }
+        li.id = '';
 
-        for (let i = (totDays - first); i < totDays; i++) {
-            let data = {
-                weekDay: 0,
-                monthDay: i,
-            };
+        document.querySelector('ul.month-days').appendChild(li);
+    };
+};
 
-            const li = dayConstructor(data, 'before');
+export default function calendarRender(calendar, saveDay, saveIndex, first) {
+    const selectedMonth = Number(document.getElementById('select-month').value);
 
-            li.id = '';
-
-            document.querySelector('ul.month-days').appendChild(li);
-        }
-
-        return first;
-    }
-}
-
-export default function calendarRender(calendar, saveDay, saveIndex) {
-    const { day, days, month, totDays, nDay } = calendar;
+    const { day, days, month, year } = calendar;
     const monthDays = document.querySelector('.month-days');
 
-    if(monthDays.childElementCount > 0) {
-        monthDays.innerHTML = '';
-    };
+    let totalDays;
+    let lastMonth;
+    let indexWeekDay = first;
 
-    let indexWeekDay = firstDay(day, nDay, totDays);
+    if (monthDays.childElementCount > 0) monthDays.innerHTML = '';
 
-    document.querySelector('h1').textContent = month;
+    totalDays = monthTotalDays(selectedMonth, year);
+    lastMonth = monthTotalDays(selectedMonth - 1, year);
+    document.querySelector('h1').textContent = month[selectedMonth];
 
-    for (let i = 1; i <= totDays; i++) {
+    beforeThisMonth(first, totalDays);
+
+    for (let i = 1; i <= totalDays; i++) {
         let indexDay = null;
 
-        if(saveDay !== null) {
+        if (saveDay !== null) {
             let index = saveDay.indexOf(i);
 
-            if(index !== -1) indexDay = saveIndex[index];
+            if (index !== -1) indexDay = saveIndex[index];
         };
 
         let data = {
@@ -58,13 +51,18 @@ export default function calendarRender(calendar, saveDay, saveIndex) {
 
         const li = dayConstructor(data, 'month');
 
-        if (i === day) li.setAttribute('style', 'box-shadow: 1px 1px 5px red; background: red; color: #f5f5f5');
+        if (i === day && selectedMonth === calendar.nMonth) {
+            li.classList.add('today');
+            li.title = 'Hoje';
+        }
 
         document.querySelector('ul.month-days').appendChild(li);
 
         indexDay++;
+        indexWeekDay++;
         if (indexDay === 7) indexDay = 0;
+        if (indexWeekDay === 7) indexWeekDay = 0;
     }
-    
+
     return calendar;
 }

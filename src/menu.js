@@ -5,6 +5,8 @@ import {
     ToDoCheck
 } from './itemsController';
 
+import { arrowLeftButton } from './components';
+
 export const handleCreateTask = (selectedDay, data) => {
     createTask(selectedDay, data);
 };
@@ -17,38 +19,37 @@ export const handleCheckTask = (data, indexTask, checkItem) => {
     ToDoCheck(data, indexTask, checkItem);
 };
 
-export default function menuNavigation(selectedDay, weekday, data) {
+const handleBackMenu = (calendar, items, returnContainer) => {
     const menu = document.querySelector('.menu');
-    const { calendar, items } = data;
-    const id = menu.getAttribute('id');
 
-    menu.querySelector('#menu-title').innerText = `${weekday} - ${selectedDay} de ${calendar.month}`;
-    menu.id = `${selectedDay}-${calendar.month}`;
-    menu.dataset.day = selectedDay;
+    menu.querySelector('#menu-title').innerText = 'Tarefas diárias';
+    menu.dataset.day = 'Daily';
+    menu.id = 'Daily';
+    returnContainer.innerHTML = '';
 
-    if(id === `${selectedDay}-${calendar.month}`) {
-        menu.querySelector('#menu-title').innerText = 'Tarefas diárias';
-        menu.dataset.day = 'Daily';
-        menu.id = 'Daily';
-
-        showTasks(calendar, items);
-    } else {
-        showTasks(calendar, items);
-    };
+    showTasks(items);
 };
 
-// export function menu(selectedDay, weekDay, data) {
-//     const { calendar, items } = data;
+export default function menuNavigation(selectedDay, weekday, { calendar, items }) {
+    const selectedMonth = Number(document.getElementById('select-month').value);
+    const returnContainer = document.querySelector('.return-container');
+    const menu = document.querySelector('.menu');
+    const id = menu.getAttribute('id');
+    const { month } = calendar;
 
-//     const { nMonth, year, month, day } = calendar;
-//     const { Months } = items;
+    menu.querySelector('#menu-title').innerText = `${weekday} - ${selectedDay} de ${month[selectedMonth]}`;
+    menu.id = `${selectedDay}-${month[selectedMonth]}`;
+    menu.dataset.day = selectedDay;
+    returnContainer.innerHTML = '';
+    
+    if(id === `${selectedDay}-${month[selectedMonth]}`) {
+        handleBackMenu(calendar, items, returnContainer);
+    } else {
+        showTasks(items);
 
-//     const { Days } = Months[nMonth];
+        returnContainer.appendChild(arrowLeftButton());
 
-
-//     if (index !== undefined) {
-//         menuRender(selectedDay, weekDay, month, data, index);
-//     } else {
-//         menuRender(selectedDay, weekDay, month, data, undefined);
-//     }
-// }
+        document.querySelector('.return')
+        .addEventListener('click', () => handleBackMenu(calendar, items, returnContainer));
+    };
+};

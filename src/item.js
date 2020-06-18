@@ -1,6 +1,9 @@
-export const itemData = (Year) => {
+export const itemData = (Year, firstDays) => {
     return {
-        Year,
+        Localization: {
+            Year,
+            firstDays,
+        },
         Daily: [],
         Months: [
             { Name: 'January', Days: [] },

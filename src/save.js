@@ -1,18 +1,20 @@
 import calendarRender from './calendarRender';
 import { showTasks } from './itemsController';
 import { newData, itemData } from './item';
-import calendarGenerator from './Date';
+import calendarGenerator, { localization } from './Date';
 
 export const saveTasks = (items, calendar, deleteOrCreateDay) => {
     const save = JSON.stringify(items);
 
     localStorage.setItem(`cronos-${calendar.year}`, save);
 
-    if(deleteOrCreateDay) {
-        const saveIndex = items.Months[calendar.nMonth].Days.map((item, index) => index);
-        const saveDay = items.Months[calendar.nMonth].Days.map(item => item.Day);
+    if (deleteOrCreateDay) {
+        const selectedMonth = Number(document.getElementById('select-month').value);
 
-        calendarRender(calendar, saveDay, saveIndex);
+        const saveIndex = items.Months[selectedMonth].Days.map((item, index) => index);
+        const saveDay = items.Months[selectedMonth].Days.map(item => item.Day);
+
+        calendarRender(calendar, saveDay, saveIndex, items.Localization.firstDays[selectedMonth]);
     };
 };
 
@@ -24,33 +26,48 @@ const parseJson = save => {
     }
 };
 
-export const getItems = () => {
+export const getItems = (firstCall = false) => {
     const calendar = calendarGenerator();
     const { nMonth, year } = calendar;
     const Save = searchItems(year);
+
+    let selectedMonth;
     
+    if (firstCall) {
+        document.getElementById('select-month').value = nMonth;
+        selectedMonth = nMonth; 
+    } else {
+        selectedMonth = Number(document.getElementById('select-month').value);
+    };
+
     if (Save !== null) {
         const items = parseJson(Save);
+        const Days = items.Months[selectedMonth].Days;
+        
+        let saveDay = null;
+        let saveIndex = null;
 
-        if(items.Daily.length > 0) {
-            showTasks(calendar, items);
-        };
+        if (items.Daily.length > 0) showTasks(calendar, items);
 
-        const saveDay = items.Months[nMonth].Days.map(item => item.Day);
-        const saveIndex = items.Months[nMonth].Days.map((item, index) => index);
-    
+        if (Days.length > 0) {
+            saveDay = Days.map(item => item.Day);
+            saveIndex = Days.map((item, index) => index);
+        }
+
         const data = {
             items,
             calendar,
+            selectedMonth,
         };
 
-        calendarRender(calendar, saveDay, saveIndex);
+        calendarRender(calendar, saveDay, saveIndex, items.Localization.firstDays[selectedMonth]);
 
         return data;
     } else {
-        const data = newData(itemData(year), calendar);
-        
-        calendarRender(calendar, null, null);
+        const firstDays = localization(calendar);
+        const data = newData(itemData(year, firstDays), calendar);
+
+        calendarRender(calendar, null, null, data.items.Localization.firstDays[selectedMonth]);
 
         return data;
     }

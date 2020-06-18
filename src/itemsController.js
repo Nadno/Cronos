@@ -1,7 +1,6 @@
 import { saveTasks } from './save';
 import { newDay } from './item';
 import './task';
-import calendarRender from './calendarRender';
 
 const getIndexDay = () => {
     const day = document.querySelector('.menu').dataset.day;
@@ -13,9 +12,9 @@ const getIndexDay = () => {
     return index;
 };
 
-export const showTasks = (calendar, items) => {
+export const showTasks = (items) => {
+    const selectedMonth = Number(document.getElementById('select-month').value);
     const { Months, Daily } = items;
-    const { nMonth } = calendar;
 
     let index;
 
@@ -23,12 +22,12 @@ export const showTasks = (calendar, items) => {
 
 
     document.querySelector('.tasks-container').innerHTML = '';
-
+   
     if (index !== undefined) {
         let tasks;
 
         if (index !== 'Daily') {
-            tasks = Months[nMonth].Days[Number(index)].Tasks;
+            tasks = Months[selectedMonth].Days[Number(index)].Tasks;
         } else {
             tasks = Daily;
         };
@@ -47,9 +46,10 @@ export const showTasks = (calendar, items) => {
 };
 
 export const ToDoCheck = ({ calendar, items }, indexTask, checkItem) => {
-    const Days = items.Months[calendar.nMonth].Days;
+    const selectedMonth = Number(document.getElementById('select-month').value);
+    const Days = items.Months[selectedMonth].Days;
     const index = getIndexDay();
-
+    console.log(Days, index);
     if (index === 'Daily') {
         items.Daily[indexTask].checked = checkItem;
     } else {
@@ -60,6 +60,7 @@ export const ToDoCheck = ({ calendar, items }, indexTask, checkItem) => {
 };
 
 export const createTask = (selectedDay, { calendar, items }) => {
+    const selectedMonth = Number(document.getElementById('select-month').value);
     const text = document.querySelector('.textarea').value;
     const task = {
         text,
@@ -73,11 +74,11 @@ export const createTask = (selectedDay, { calendar, items }) => {
     if (index === 'Daily') {
         items.Daily.push(task);
     } else {
-        const Days = items.Months[calendar.nMonth].Days;
-
-        if (Number(selectedDay) >= calendar.day && text.length > 4) {
+        const Days = items.Months[selectedMonth].Days;
+        
+        if ((Number(selectedDay) >= calendar.day || selectedMonth > calendar.nMonth) && text.length > 4) {
             if (index !== undefined) {
-                Days[index].Tasks.push(task);     
+                Days[Number(index)].Tasks.push(task);     
             } else {
                 const day = newDay(Number(selectedDay), task);
 
@@ -88,10 +89,11 @@ export const createTask = (selectedDay, { calendar, items }) => {
     };
 
     saveTasks(items, calendar, createDay)
-    showTasks(calendar, items);
+    showTasks(items);
 };
 
 export const deleteTask = ({ calendar, items }, indexTask) => {
+    const selectedMonth = Number(document.getElementById('select-month').value);
     const index = getIndexDay();
     let deleteDay = false;
 
@@ -100,7 +102,8 @@ export const deleteTask = ({ calendar, items }, indexTask) => {
 
         dailyList.splice(indexTask, 1);
     } else {
-        const Days = items.Months[calendar.nMonth].Days;
+        const Days = items.Months[selectedMonth].Days;
+        console.log(Days);
 
         if (Days[index].Tasks.length === 1) {
             Days.splice(index, 1);
@@ -111,5 +114,5 @@ export const deleteTask = ({ calendar, items }, indexTask) => {
     }
 
     saveTasks(items, calendar, deleteDay);
-    showTasks(calendar, items);
+    showTasks(items);
 };

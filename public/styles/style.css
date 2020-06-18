@@ -95,7 +95,7 @@ h3 {
     width: 90%;
     height: 24px;
 
-    color: #6B7897;
+    color: #34485E;
     font-size: 1.6rem;
     text-align: center;
 
@@ -105,7 +105,7 @@ h3 {
 .calendar-container .before {
     width: 90%;
 
-    color: #34485E;
+    color: #6B7897;
     text-align: center;
     padding: 4px 8px;
 }
@@ -120,19 +120,29 @@ h3 {
     justify-content: center;
 
     border-radius: 124px;
-    color: #34485E;
+    border: 1px solid rgba(0, 0, 0, 0);
+    color: #6B7897;
     padding: 4px 8px;
+    margin: 4px 0;
 
-    transition: 0.3s;
+    transition: 0.5s;
+}
+
+.month.today {
+    background-color: rgba(255, 0, 0, 0.6);
+    box-shadow: 1px 1px 8px rgba(255, 0, 0, 0.6);
+    color: #fff;
+}
+
+.month.has-todo {
+    border: 1px solid #96DAF9;
 }
 
 .calendar-container .month:hover {
     cursor: pointer;
-    color: #fff;
-
-    background-color: #96DAF9;
-    transform: scale(1.2);
-    z-index: 2;
+    color: #34485E;
+    border: 1px solid #34485E;
+    box-shadow: 1px 1px 8px rgb(179, 179, 179);
 }
 
 /* MENU */
@@ -151,6 +161,19 @@ h3 {
     box-shadow: 1px 1px 6px rgb(200, 200, 200);
 
     transition: all 0.4s linear;
+}
+
+.return {
+    width: 32px;
+    height: 32px;
+
+    background-color: rgba(0,0,0,0);
+    cursor: pointer;
+    border: none;
+}
+
+.return:hover {
+    opacity: 0.6;
 }
 
 #menu-title {
@@ -186,6 +209,16 @@ h3 {
     justify-content: center;
 
     transition: 0.2s;
+}
+
+.tasks-container label span {
+    font-size: 1.6rem;
+    overflow: hidden;
+    word-wrap: break-word;
+
+    color: rgb(70, 70, 70);
+
+    grid-area: b;
 }
 
 .tasks-container label:hover {
@@ -227,15 +260,6 @@ h3 {
     color: red;
 }
 
-.tasks-container label span {
-    font-size: 1.6rem;
-    overflow: hidden;
-    word-wrap: break-word;
-    color: rgb(70, 70, 70);
-
-    grid-area: b;
-}
-
 .menu .tasks-container::-webkit-scrollbar {
     display: none;
 }
@@ -265,7 +289,7 @@ h3 {
     font-size: 1.6rem;
     color: rgb(70, 70, 70);
 
-    padding: 6px;
+    padding: 8px;
     background: #f5f5f5;
     border-color: rgb(200, 200, 200);
     

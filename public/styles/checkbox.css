@@ -1,18 +1,10 @@
 /* CHECKBOX STYLE */
 
-.tasks-container *{
-    margin: 0;
-    padding: 0;
-    outline: none;
-    box-sizing: border-box;
-    color: whitesmoke;
-}
-
 .tasks-container input[type=checkbox] + label {
     display: grid;
-    margin: 0.2em;
+    margin: 0 0.2em;
     cursor: pointer;
-    padding: 0.1em;
+    padding: 8px 0;
     font-size: 1.6rem;
 }
 
