@@ -1,118 +1,217 @@
-import { saveTasks } from './save';
-import { newDay } from './item';
-import './task';
+import { saveToDos } from './save';
+import { monthTotalDays } from './Date';
+import { eventConstructor } from './components/components';
+import './components/ToDo';
 
-const getIndexDay = () => {
-    const day = document.querySelector('.menu').dataset.day;
+export default function ItemsController() {
+    const itemsController = {};
 
-    if (day === 'Daily') return day;
+    const getIndexDay = () => {
+        const day = document.querySelector('.menu').dataset.day;
 
-    const index = document.getElementById(day).dataset.indexday;
+        if (day === 'Daily') return day;
 
-    return index;
-};
+        const index = document.getElementById(day).dataset.indexday;
 
-export const showTasks = (items) => {
-    const selectedMonth = Number(document.getElementById('select-month').value);
-    const { Months, Daily } = items;
+        return index;
+    };
 
-    let index;
+    const showToDos = ({ items, selectedMonth }) => {
+        const listContainer = document.querySelector('.todo-list');
+        const { Months, Daily } = items;
+        const index = getIndexDay();
 
-    index = getIndexDay();
+        listContainer.innerHTML = '';
 
+        if (index !== undefined) {
+            let tasks;
 
-    document.querySelector('.tasks-container').innerHTML = '';
-   
-    if (index !== undefined) {
-        let tasks;
+            if (index !== 'Daily') {
+                tasks = Months[selectedMonth].Days[Number(index)].Tasks;
+            } else {
+                tasks = Daily;
+            };
 
-        if (index !== 'Daily') {
-            tasks = Months[selectedMonth].Days[Number(index)].Tasks;
+            if (tasks.length > 0) {
+                for (let i = 0; i < tasks.length; i++) {
+                    const toDo = document.createElement('to-do');
+                    const li = document.createElement('li');
+                    toDo.task = { tasks, i };
+
+                    li.appendChild(toDo);
+                    listContainer.appendChild(li);
+                };
+            }
+        };
+    };
+
+    const ToDoCheck = data => {
+        const { indexTask, checkItem, selectedMonth, items, calendar } = data;
+        const Days = items.Months[selectedMonth].Days;
+        const index = getIndexDay();
+
+        if (index === 'Daily') {
+            items.Daily[indexTask].checked = checkItem;
         } else {
-            tasks = Daily;
+            Days[index].Tasks[indexTask].checked = checkItem;
+        }
+
+        saveToDos(items, calendar);
+    };
+
+    const createToDo = data => {
+        const { selectedDay, selectedMonth, items, calendar } = data;
+
+        const text = document.querySelector('.todo-text').value;
+        const index = getIndexDay();
+        const task = {
+            text,
+            checked: false
         };
 
-        if (tasks.length > 0) {
-            for (let i = 0; i < tasks.length; i++) {
-                const toDo = document.createElement('to-do');
-                const li = document.createElement('li');
-                toDo.task = { tasks, i };
+        if (index === 'Daily') {
+            items.Daily.push(task);
+            saveToDos(items, calendar);
+        } else {
+            const Days = items.Months[selectedMonth].Days;
 
-                li.appendChild(toDo);
-                document.querySelector('.tasks-container').appendChild(li);
+            if ((selectedDay >= calendar.day || selectedMonth > calendar.nMonth) && text.length > 4) {
+                if (index >= 0) {
+                    Days[Number(index)].Tasks.push(task);
+
+                    if (Days[Number(index)].Events.length > 0) {
+                        saveToDos(items, calendar, true);
+                    } else {
+                        saveToDos(items, calendar);
+                    };
+                } else {
+                    const day = { Day: selectedDay, Events: [], Tasks: [task] };
+
+                    Days.push(day);
+                    saveToDos(items, calendar, true);
+                };
+            };
+        };
+
+        showToDos(data);
+    };
+
+    const deleteTodo = data => {
+        const { selectedMonth, items, calendar, indexTask } = data;
+        const index = getIndexDay();
+
+        if (index === 'Daily') {
+            const dailyList = items.Daily;
+
+            dailyList.splice(indexTask, 1);
+            saveToDos(items, calendar);
+        } else {
+            const Days = items.Months[selectedMonth].Days;
+
+            if (Days[index].Tasks.length === 1) {
+                Days.splice(index, 1);
+
+                saveToDos(items, calendar, true);
+            } else {
+                Days[index].Tasks.splice(indexTask, 1);
+
+                saveToDos(items, calendar);
             };
         }
-    };
-};
 
-export const ToDoCheck = ({ calendar, items }, indexTask, checkItem) => {
-    const selectedMonth = Number(document.getElementById('select-month').value);
-    const Days = items.Months[selectedMonth].Days;
-    const index = getIndexDay();
-    console.log(Days, index);
-    if (index === 'Daily') {
-        items.Daily[indexTask].checked = checkItem;
-    } else {
-        Days[index].Tasks[indexTask].checked = checkItem;
-    }
-
-    saveTasks(items, calendar);
-};
-
-export const createTask = (selectedDay, { calendar, items }) => {
-    const selectedMonth = Number(document.getElementById('select-month').value);
-    const text = document.querySelector('.textarea').value;
-    const task = {
-        text,
-        checked: false
+        showToDos(data);
     };
 
-    const index = getIndexDay();
+    const createEvent = (data, name, alert, description) => {
+        const { selectedMonth, selectedDay, items, calendar } = data;
 
-    let createDay = false; 
+        const EventsOnMonths = items.Location.EventsOnMonths;
+        const monthVerify = EventsOnMonths.indexOf(selectedMonth);
+        const Events = items.Months[selectedMonth].Events;
 
-    if (index === 'Daily') {
-        items.Daily.push(task);
-    } else {
-        const Days = items.Months[selectedMonth].Days;
-        
-        if ((Number(selectedDay) >= calendar.day || selectedMonth > calendar.nMonth) && text.length > 4) {
-            if (index !== undefined) {
-                Days[Number(index)].Tasks.push(task);     
-            } else {
-                const day = newDay(Number(selectedDay), task);
-
-                Days.push(day);
-                createDay = true;
-            };
+        const event = {
+            name,
+            description,
+            month: selectedMonth,
+            lastMonth: -1,
+            day: selectedDay,
         };
-    };
 
-    saveTasks(items, calendar, createDay)
-    showTasks(items);
-};
+        if (selectedDay < alert) {
+            const totalDays = monthTotalDays((selectedMonth - 1), calendar.year);
+            const lastMonthDays = alert - selectedDay;
 
-export const deleteTask = ({ calendar, items }, indexTask) => {
-    const selectedMonth = Number(document.getElementById('select-month').value);
-    const index = getIndexDay();
-    let deleteDay = false;
+            event.lastMonth = selectedMonth - 1;
+            event.alertDay = totalDays - lastMonthDays;
+        } else if (selectedDay > alert) {
+            const alertDay = selectedDay - alert;
 
-    if (index === 'Daily') {
-        const dailyList = items.Daily;
+            event.alertDay = alertDay;
 
-        dailyList.splice(indexTask, 1);
-    } else {
-        const Days = items.Months[selectedMonth].Days;
-        console.log(Days);
-
-        if (Days[index].Tasks.length === 1) {
-            Days.splice(index, 1);
-            deleteDay = true;
         } else {
-            Days[index].Tasks.splice(indexTask, 1);
+            event.alertDay = 1;
         };
+
+        Events.push(event);
+        if (monthVerify < 0) EventsOnMonths.push(selectedMonth);
+
+        saveToDos(items, calendar, true);
+    };
+
+    const showEvents = ({ items, weekDay, calendar, selectedMonth, selectedDay }) => {
+        const index = getIndexDay();
+        const month = calendar.month[selectedMonth];
+        const eventList = document.querySelector('.event-list');
+
+        eventList.innerHTML = '';
+
+        if(selectedDay === 'Daily') {
+            items.Months[selectedMonth].Events.map(item => {
+                const newWeekDay = document.getElementById(item.day).dataset.weekday;
+                const eventLi = eventConstructor(item.name, item.day, item.description, newWeekDay);
+
+                document.getElementById('event-menu-title').innerText = month;
+
+                eventList.appendChild(eventLi);
+            });
+        } else {
+            items.Months[selectedMonth].Events.map(item => {
+                if(item.day === Number(selectedDay)) {
+                    const eventLi = eventConstructor(item.name, item.day, item.description, weekDay);
+
+                    document.getElementById('event-menu-title').innerText = `Dia ${item.day} de ${month}`;
+                    eventLi.querySelector('h4').innerText = `${weekDay}`;
+
+                    eventList.appendChild(eventLi);
+                };
+            });
+        };
+    };
+
+    const dailyReset = ({ items, calendar, selectedMonth }) => {
+        const { nMonth, day } = calendar;
+
+        if (day > items.Day || nMonth > items.Month) {
+            items.Month = nMonth;
+            items.Day = day;
+
+            for (let key in items.Daily) {
+                items.Daily[key].checked = false;
+            };
+
+            saveToDos(items, calendar);
+        }
+
+        showToDos({ items, selectedMonth });
     }
 
-    saveTasks(items, calendar, deleteDay);
-    showTasks(items);
+    itemsController.showEvents = data => showEvents(data);
+    itemsController.showToDos = data => showToDos(data);
+    itemsController.ToDoCheck = data => ToDoCheck(data);
+    itemsController.createToDo = data => createToDo(data);
+    itemsController.deleteTodo = data => deleteTodo(data);
+    itemsController.createEvent = (data, name, alert, description) => createEvent(data, name, alert, description);
+    itemsController.dailyReset = data => dailyReset(data);
+
+    return itemsController;
 };

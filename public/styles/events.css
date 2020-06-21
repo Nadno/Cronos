@@ -1,0 +1,249 @@
+#create-event-check {
+    display: none;
+}
+
+#create-event-check[type=checkbox]:checked ~ .create-event-blur {
+    display: initial;
+}
+
+#create-event-check[type=checkbox]:checked ~ main {
+    filter: blur(1px);
+}
+
+.create-event-blur {
+    position: absolute;
+    width: 100vw;
+    height: 100vh;
+
+    top: 0;
+    z-index: 10;
+    display: none;
+}
+
+#create-event {
+    position: absolute;
+    width: 50vw;
+    min-width: 300px;
+
+    display: flex;
+    flex-direction: column;
+    padding: 8px;
+    align-items: center;
+    background-color: #fff;
+    border: 1px rgb(200, 200, 200) solid;
+    box-shadow: 2px 2px 8px rgba(200, 200, 200, 0.5);
+
+
+    color: #34485E;
+
+    top: 50%;
+    right: 50%;
+    transform: translate(50%, -50%);
+}
+
+#create-event .arrow-left {
+    position: absolute;
+    width: 32px;
+    height: 32px;
+  
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    border-radius: 50%;
+    border: 1px solid rgb(200, 200, 200);
+    background-color: rgba(0, 0, 0, 0);
+    cursor: pointer;
+
+    left: 8px;
+    transition: 1s;
+}
+
+#create-event .arrow-left:hover {
+    box-shadow: 2px 2px 8px rgba(200, 200, 200, 0.4);
+    background-image: linear-gradient(#fff, rgba(200, 200, 200, 0.4));
+}
+
+#create-event h2 {
+    width: 260px;
+    font-size: 2rem;
+    margin: 24px 0 8px 0;
+    text-align: center;
+    border-bottom: 1px rgb(200, 200, 200) solid;
+}
+
+#create-event fieldset {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+
+    border: none;
+    font-size: 1.6rem;
+}
+
+#create-event fieldset legend {
+    font-size: 1.8rem;
+    font-weight: bold;
+    margin: 8px 0;
+}
+
+#create-event #alert {
+    width: 260px;
+    height: 32px;
+    cursor: pointer;
+    margin: 8px 0;
+    
+    font-size: 1.4rem;
+    background: #f5f5f5;
+    border-color: rgb(200, 200, 200);
+    box-shadow: 1px 1px 6px rgb(220, 220, 220);
+    
+}
+
+#create-event fieldset input {
+    height: 32px;
+    padding: 0 8px;
+}
+
+#create-event fieldset 
+textarea, 
+input {
+    min-width: 260px;
+    max-width: 260px;   
+
+    margin: 8px 0;
+    font-size: 1.4rem;
+
+    background: #f5f5f5;
+    border: 1px rgb(200, 200, 200) solid;
+    box-shadow: 1px 1px 6px rgb(220, 220, 220);
+
+    transition: 0.5s;
+}
+
+#create-event fieldset textarea {
+    min-height: 120px;
+    max-height: 120px;
+    padding: 8px;
+}
+
+#create-event button {
+    position: relative;
+    width: 40%;
+    height: 5vh;
+    min-width: 100px;
+    max-width: 260px;
+
+    border-radius: 4px;
+    border: none;
+    margin-top: 10px;
+
+    font-size: 1.6rem;
+    font-weight: bold;
+    color: white;
+
+    background: #60CDFF;
+    cursor: pointer;
+    transition: linear 0.3s;
+}
+
+#create-event button:hover {
+    background: #6B7897;
+    opacity: 0.8;
+}
+
+.events {
+    position: relative;
+    z-index: 3;
+}
+
+#event-menu,
+.event-container {
+    display: none;
+}
+
+#event-menu:checked ~ .event-container {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    padding: 8px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #fff;
+
+    z-index: 2;
+    right: 0;
+    top: 0;
+}
+
+.event-container .arrow-left {
+    position: absolute;
+    width: 40px;
+    height: 40px;
+  
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    border-radius: 50%;
+    border: 1px solid rgb(200, 200, 200);
+    background-color: rgba(0, 0, 0, 0);
+    cursor: pointer;
+
+    left: 12px;
+    top: 16px;
+    transition: 1s;
+}
+
+.event-container .arrow-left:hover {
+    box-shadow: 2px 2px 8px rgba(200, 200, 200, 0.4);
+    background-image: linear-gradient(#fff, rgba(200, 200, 200, 0.4));
+}
+
+.event-list-container {
+    position: relative;
+    width: 100%;
+    margin-top: 56px;
+    border-top: 1px solid rgb(200, 200, 200);
+
+    overflow: hidden;
+    overflow-y: scroll;
+}
+
+.event-list-container::-webkit-scrollbar {
+    scroll-behavior: smooth;
+    display: none;
+}
+
+.event-list-container h3 {
+    padding-top: 4px;
+    margin: 4px 0;
+    text-align: center;
+}
+
+
+.event-list {
+    width: 100%;
+    display: flex;
+
+    list-style: none;
+    flex-direction: column;
+    align-items: center;
+    
+    background-color: #f5f5f5;
+    border: 1px solid rgb(200, 200, 200);
+    box-shadow: 2px 2px 8px rgba(200, 200, 200, 0.5);
+}
+
+.event {
+    width: 100%;
+    margin: 8px 0;
+    padding: 4px;
+    border-bottom: 1px solid rgba(200, 200, 200);
+}
+
+.event span {
+    font-size: 1.6rem;
+}

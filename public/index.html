@@ -1,44 +1,81 @@
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" type="text/css" href="styles/style.css">
     <link rel="stylesheet" type="text/css" href="styles/checkbox.css">
-    <link rel="stylesheet" media="(max-width: 900px)"" href="styles/responsive.css">
+    <link rel="stylesheet" href="styles/events.css">
+    <link rel="stylesheet" media="(max-width: 900px)" href="styles/responsive.css">
+
     <title>Cronos</title>
 </head>
+
 <body>
-    <header>
+    <header class="cronos">
         Cronos
     </header>
- 
+
+    <input type="checkbox" id="create-event-check" />
+
     <main>
         <section>
-            <div class="menu" data-day="Daily">
-                <div class="return-container"></div>
-                <h3 id="menu-title">Tarefas diárias</h3>
-            
-                <form id="render-todo">
-                    <ul class="tasks-container">
-                        
-                    </ul>
+            <div id="Daily" class="menu" data-day="Daily">
+                <input type="checkbox" id="event-menu" />
+
+                <header class="header-menu">
+                    <div class="return-container">
+                        <button class="return" type="button" title="Início">
+                            <img src="assets/home.svg" alt="Início">
+                        </button>
+                    </div>
+
+                    <div class="events-container">
+                        <button class="bell" type="button" title="Eventos">
+                            <img src="assets/bell.svg" alt="Eventos">
+                        </button>
+                    </div>
+
+                    <button class="events" type="button" title="Criar Eventos">
+                        <img src="assets/calendar.svg" alt="Criar Eventos">
+                    </button>
+                </header>
+
+                <h2 id="menu-title"></h2>
+
+                <form id="todo-container">
+                    <fieldset>
+                        <legend class="todo-legend">Tarefas diárias:</legend>
+                        <ul class="todo-list">
+
+                        </ul>
+                    </fieldset>
                 </form>
-    
-                <div class="create-tasks">
-                    <p>Criar uma tarefa:</p>
-                    
-                    <form id="create-task">
-                        <fieldset>
-                            <textarea maxlength="120" class="textarea"></textarea>
-                            <button type="submit">Criar</button>
-                        </fieldset>
-                    </form>
+
+                <form id="create-todo">
+                    <fieldset>
+                        <legend>Criar uma tarefa:</legend>
+                        <textarea maxlength="120" class="todo-text" placeholder="Digite uma tarefa"></textarea>
+                        <button type="submit">Criar</button>
+                    </fieldset>
+                </form>
+
+                <div class="event-container">
+                    <h3>Eventos</h3>
+                    <label class="arrow-left" for="event-menu">
+                        <img src="assets/arrow-left.svg" alt="retornar" title="retornar">
+                    </label>
+                    <div class="event-list-container">
+                        <h3 id="event-menu-title"></h3>
+                        <ul class="event-list">                          
+                        </ul>
+                    </div>
                 </div>
             </div>
         </section>
 
-        <div>
+        <section class="calendar-container">
             <form class="select-month">
                 <select name="months" id="select-month">
                     <option value="0">Janeiro</option>
@@ -55,28 +92,61 @@
                     <option value="11">Dezembro</option>
                 </select>
             </form>
-        </div>
-    
-        <section class="calendar-container">
+
             <h1></h1>
 
-            <ul class="week-days">               
-                <li class="days">Domingo</li> 
-                <li class="days">Segunda</li> 
-                <li class="days">Terça</li> 
-                <li class="days">Quarta</li> 
-                <li class="days">Quinta</li> 
-                <li class="days">Sexta</li> 
-                <li class="days">Sabádo</li>                   
+            <ul class="week-days">
+                <li class="days">Domingo</li>
+                <li class="days">Segunda</li>
+                <li class="days">Terça</li>
+                <li class="days">Quarta</li>
+                <li class="days">Quinta</li>
+                <li class="days">Sexta</li>
+                <li class="days">Sabádo</li>
             </ul>
 
-    
+
             <ul class="month-days">
-                
-            </ul>                          
+
+            </ul>
         </section>
     </main>
 
+    <section class="create-event-blur">
+        <form id="create-event">
+            <label class="arrow-left" for="create-event-check">
+                <img src="assets/arrow-left.svg" alt="retornar" title="retornar">
+            </label>
+
+            <h2>20 de junho de 2020</h2>
+
+            <fieldset>
+                <legend>Criar evento:</legend>
+
+                <label for="alert">Quando você quer ser avisado?</label>
+                <select name="event-alert" id="alert">
+                    <option value="0">Selectione um dia</option>
+                    <option value="1">Um dia antes</option>
+                    <option value="2">Dois dias antes</option>
+                    <option value="3">Três dias antes</option>
+                    <option value="4">Quatro dias antes</option>
+                    <option value="5">Cinco dias antes</option>
+                </select>
+
+                <label for="name">Nome:</label>
+                <input id="name" name="event-name" type="text" maxlength="30"
+                    placeholder="Digite um nome para o evento" />
+
+                <label for="descricao">Descrição:</label>
+                <textarea name="event-description" id="description" maxlength="220"
+                    placeholder="Digite uma descrição para o evento"></textarea>
+            </fieldset>
+
+            <button type="submit">Criar</button>
+        </form>
+    </section>
+
     <script src="../bundle.js"></script>
 </body>
+
 </html>

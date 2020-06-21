@@ -1,68 +1,11 @@
-const meses = (year) => {
-    let february = 28;
-
-    if (year % 4 === 0) february = 29;
-
-    return [
-        {
-            name: 'Janeiro',
-            totalDays: 31,
-        },
-        {
-            name: 'Fevereiro',
-            totalDays: february,
-        },
-        {
-            name: 'Março',
-            totalDays: 31,
-        },
-        {
-            name: 'Abril',
-            totalDays: 30,
-        },
-        {
-            name: 'Maio',
-            totalDays: 31,
-        },
-        {
-            name: 'Junho',
-            totalDays: 30,
-        },
-        {
-            name: 'Julho',
-            totalDays: 31,
-        },
-        {
-            name: 'Agosto',
-            totalDays: 31,
-        },
-        {
-            name: 'Setembro',
-            totalDays: 30,
-        },
-        {
-            name: 'Outubro',
-            totalDays: 31,
-        },
-        {
-            name: 'Novembro',
-            totalDays: 30,
-        },
-        {
-            name: 'Dezembro',
-            totalDays: 31,
-        },
-    ];
-}
-
 export const monthTotalDays = (month, year) => {
-    const monthsTrinta = [0, 2, 5, 7, 9, 11];
+    const thirtyDays = [3, 5, 8, 10];
 
     if (month === 1) {
         if (year % 4 === 0) return 29;
 
         return 28;
-    } else if (monthsTrinta.indexOf(month) !== -1) {
+    } else if (thirtyDays.indexOf(month) !== -1) {
         return 30;
     } else {
         return 31;
@@ -99,8 +42,7 @@ export default function calendarGenerator() {
     return calendar;
 }
 
-const thisMonth = calendar => {
-    const { nMonth, year, days, day, nDay } = calendar;
+const thisMonth = ({ day }) => {
     let first = nDay;
 
     if (day > 1) {
@@ -114,20 +56,20 @@ const thisMonth = calendar => {
     return first;
 };
 
-const nextMonths = ({ nMonth, year, days }, firstDay) => {
-    const todosmeses = meses(year);
-
+const nextMonths = ({ year }, firstDay) => {
     let first = firstDay;
     let fisrtDays = [];
 
-    for (let m = 0; m <= 11; m++) {
-        for (let i = 1; i < todosmeses[m].totalDays; i++) {
+    for (let month = 0; month <= 11; month++) {
+        const totalDays = monthTotalDays(month, year);
+
+        for (let i = 1; i < totalDays; i++) {
             if (i === 1) {
                 fisrtDays.push(first);
                 // console.log(days[first], months[m], todosmeses[m].totalDays);
             }
 
-            if (i < todosmeses[m].totalDays) {
+            if (i < totalDays) {
                 if (first < 6) {
                     first++;
                 } else { first = 0; };
@@ -136,7 +78,7 @@ const nextMonths = ({ nMonth, year, days }, firstDay) => {
 
         if (first < 6) {
             first++;
-        } else { first = 0; };      
+        } else { first = 0; };
     }
 
     return fisrtDays;
@@ -144,19 +86,18 @@ const nextMonths = ({ nMonth, year, days }, firstDay) => {
 
 const latestMonths = calendar => {
     const { nMonth, year, day, nDay } = calendar;
-    const todosmeses = meses(year);
 
-    let actualDay = day;
+    let totalDays = day;
     let first = nDay;
     let fisrtDays = [];
 
-    for (let m = nMonth; m >= 0; m--) {
-        if (m < nMonth) {
-            actualDay = todosmeses[m].totalDays;
+    for (let month = nMonth; month >= 0; month--) {
+        if (month < nMonth) {
+            totalDays = monthTotalDays(month, year);
         };
 
-        for (let i = actualDay; i >= 1; i--) {
-            if (i > 1) {
+        for (let days = totalDays; days >= 1; days--) {
+            if (days > 1) {
                 if (first > 0) {
                     first--;
                 } else { first = 6 };
@@ -176,7 +117,7 @@ const latestMonths = calendar => {
 export const localization = calendar => {
     const { nMonth } = calendar;
 
-    if(nMonth === 0) {
+    if (nMonth === 0) {
         const firstDay = thisMonth(calendar);
         const firstDays = nextMonths(calendar, firstDay);
 

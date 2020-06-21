@@ -1,11 +1,9 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,400;1,300&display=swap');
-
 * {
     padding: 0;
     margin: 0;
     outline: none;
     box-sizing: border-box;
-
     font-family: 'Roboto', sans-serif;
 }
 
@@ -21,14 +19,13 @@ html {
     font-size: 62.5%;
 }
 
-header {
+.cronos {
     width: 100%;
     height: 48px;
     background: #60CDFF;
     color: #F9FAFE;
     font-weight: bold;
     font-size: 2.4rem;
-
     display: flex;
     justify-content: center;
     align-items: center;
@@ -44,45 +41,65 @@ h3 {
 }
 
 .calendar-container {
+    position: relative;
     width: 100%;
     max-width: 900px;
     min-width: 400px;
-    max-height: 420px;
-
+    height: 90vh;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-
     color: #34485E;
-    margin: 32px;
+    margin: 0 16px;
+    padding-top: 24px;
     background-color: #fff;
     box-shadow: 1px 1px 6px rgb(200, 200, 200);
+}
+
+.calendar-container .select-month {
+    position: absolute;
+    top: 2%;
+    right: 2%;
+    width: 128px;
+    height: 32px;
+    margin-bottom: 8px;
+}
+
+.calendar-container #select-month {
+    width: 100%;
+    height: 100%;
+    border: none;
+    cursor: pointer;
+    border-bottom: 1px solid rgb(200, 200, 200);
+    background-color: rgba(0, 0, 0, 0);
 }
 
 .calendar-container h1 {
     height: 40px;
     width: 100%;
-    margin-bottom: 32px;
-
+    margin-bottom: 24px;
     font-size: 3rem;
     text-align: center;
 }
 
-.calendar-container 
-.week-days, 
-.month-days {
+.week-days {
+    position: relative;
     list-style: none;
     display: grid;
-    grid-template-columns: repeat(7, minmax(46px, 1fr));
-
-    font-size: 2rem;
-    font-weight: bold;
+    grid-template-columns: repeat(7, minmax(46px, 72px));
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
-.week-days, 
 .month-days {
-    width: 90%;
+    position: relative;
+    list-style: none;
+    display: grid;
+    grid-template-columns: repeat(7, 72px);
+    grid-template-rows: repeat(6, 72px);
+    font-size: 1.8rem;
+    font-weight: bold;
 }
 
 .week-days {
@@ -92,57 +109,81 @@ h3 {
 }
 
 .calendar-container .days {
-    width: 90%;
+    width: 100%;
     height: 24px;
-
     color: #34485E;
     font-size: 1.6rem;
     text-align: center;
-
     border-bottom: 1px solid rgb(200, 200, 200);
 }
 
 .calendar-container .before {
     width: 90%;
-
-    color: #6B7897;
+    color: #969696;
+    cursor: pointer;
     text-align: center;
+    margin: auto auto;
     padding: 4px 8px;
 }
 
 .calendar-container .month {
     position: relative;
-    z-index: 1;
-    width: 90%;
-
+    width: 60%;
+    height: 60%;
+    padding: 4px 8px;
+    margin: auto auto;
     display: flex;
     align-items: center;
     justify-content: center;
-
-    border-radius: 124px;
+    border-radius: 50%;
     border: 1px solid rgba(0, 0, 0, 0);
     color: #6B7897;
-    padding: 4px 8px;
-    margin: 4px 0;
-
     transition: 0.5s;
 }
 
+.month.has-todo-and-event,
+.month.has-todo,
+.month.has-event,
 .month.today {
-    background-color: rgba(255, 0, 0, 0.6);
-    box-shadow: 1px 1px 8px rgba(255, 0, 0, 0.6);
-    color: #fff;
+    color: whitesmoke;
+    cursor: pointer;
+    border: none;
 }
 
 .month.has-todo {
-    border: 1px solid #96DAF9;
+    background-image: linear-gradient(#BD23C2, #bd23c28a);
+    box-shadow: 4px 4px 12px #BD23C2;
+}
+
+.month.today {
+    background-image: linear-gradient(#D9361C, #ff22008a);
+    box-shadow: 4px 4px 12px #D9361C;
+}
+
+.month.has-event {
+    background-image: linear-gradient(#CF841B, #cf841b8a);
+    box-shadow: 4px 4px 12px #CF841B;
+}
+
+.month.has-todo-and-event {
+    background-image: linear-gradient(#39FF14, #37ff1488);
+    box-shadow: 4px 4px 12px #39FF14;
+}
+
+.calendar-container .month.selected-day {
+    background-image: linear-gradient(#006a9b, #60CDFF);
+    box-shadow: 4px 4px 12px #72d2ff;
+    color: whitesmoke;
+    cursor: pointer;
+    border: none;
 }
 
 .calendar-container .month:hover {
+    background-image: linear-gradient(#006a9b, #60CDFF);
+    box-shadow: 4px 4px 12px #72d2ff;
+    color: whitesmoke;
     cursor: pointer;
-    color: #34485E;
-    border: 1px solid #34485E;
-    box-shadow: 1px 1px 8px rgb(179, 179, 179);
+    border: none;
 }
 
 /* MENU */
@@ -154,26 +195,48 @@ h3 {
     min-width: 320px;
     max-width: 420px;
     padding: 16px;
-
     font-size: 1.8rem;
     color: #6B7897;
     background: #fff;
     box-shadow: 1px 1px 6px rgb(200, 200, 200);
-
     transition: all 0.4s linear;
 }
 
-.return {
-    width: 32px;
-    height: 32px;
-
-    background-color: rgba(0,0,0,0);
-    cursor: pointer;
-    border: none;
+.header-menu {
+    width: 100%;
+    margin-bottom: 8px;
+    display: flex;
+    justify-content: space-between;
 }
 
-.return:hover {
-    opacity: 0.6;
+.return,
+.events,
+.bell {
+    position: relative;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 1px solid rgb(200, 200, 200);
+    background-color: rgba(0, 0, 0, 0);
+    cursor: pointer;
+
+    transition: 1s;
+}
+
+.return {
+    display: none;
+}
+
+.return-container {
+    width: 40px;
+    height: 40px;
+}
+
+.return:hover,
+.events:hover,
+.bell:hover {
+    box-shadow: 2px 2px 8px rgba(200, 200, 200, 0.4);
+    background-image: linear-gradient(#fff, rgba(200, 200, 200, 0.4));
 }
 
 #menu-title {
@@ -181,126 +244,122 @@ h3 {
     font-weight: bold;
 }
 
-.tasks-container {
-    max-height: 280px;
-    min-height: 100px;
+#todo-container fieldset {
+    border: none;
+}
+
+.todo-list {
+    height: 25vh;
     width: 100%;
     min-width: 200px;
     max-width: 380px;
-    
+    max-height: 280px;
+
     overflow-y: scroll;
     overflow-x: hidden;
     list-style: none;
 
     padding: 0 12px 0 6px;
-    border: 1px rgb(200, 200, 200) solid;
     background: #f5f5f5;
+    border: 1px rgb(200, 200, 200) solid;
     box-shadow: 1px 1px 6px rgb(220, 220, 220);
-
     transition: 0.5s;
 }
 
-.task {
+.todo-list label {
     position: relative;
     width: 100%;
-
     grid-template-areas: "a b c";
     grid-template-columns: 32px 1fr 32px;
     justify-content: center;
-
     transition: 0.2s;
 }
 
-.tasks-container label span {
+.todo-list label span {
     font-size: 1.6rem;
     overflow: hidden;
     word-wrap: break-word;
-
     color: rgb(70, 70, 70);
-
     grid-area: b;
 }
 
-.tasks-container label:hover {
+.todo-list label:hover {
     background: #fff;
     transform: scale(1.03);
-} 
+}
 
-.tasks-container input {
+.todo-list input {
     grid-area: a;
 }
 
-.tasks-container .delete {
+.todo-list .delete {
     position: relative;
-    transform: translateY(-50%);
-    top: 50%;
-
-
     width: 32px;
     height: 100%;
-    border: none;
-    border-left: 1px solid rgb(200, 200, 200);
-    margin-left: 4px;
+    
 
     font-weight: bold;
     font-size: 2rem;
     color: #6B7897;
-    background: rgba(0,0,0,0);
+
+    background: rgba(0, 0, 0, 0);
+    border-left: 1px solid rgb(200, 200, 200);
+    border: none;
+    margin-left: 4px;
 
     display: flex;
     justify-content: center;
     align-items: center;
-
     cursor: pointer;
-    transition: all 0.3s;
+
+    transform: translateY(-50%);
+    transition: 0.3s;
+    top: 50%;
     grid-area: c;
 }
 
-.tasks-container .delete:hover {
+.todo-list .delete:hover {
     color: red;
 }
 
-.menu .tasks-container::-webkit-scrollbar {
+.menu .todo-list::-webkit-scrollbar {
     display: none;
 }
 
-.menu .create-tasks {
+.menu #create-todo {
     width: 100%;
     margin-top: 14px;
-
     display: flex;
     flex-direction: column;
     justify-content: center;
     color: #34485E;
 }
 
-.menu .create-tasks fieldset {
+.menu #create-todo fieldset {
     border: none;
 }
 
-.menu .create-tasks textarea {
+.menu #create-todo textarea {
     position: relative;
     width: 100%;
-    min-width: 270px;
+    min-width: 284px;
     max-width: 380px;
     max-height: 120px;
     min-height: 120px;
 
     font-size: 1.6rem;
     color: rgb(70, 70, 70);
-
     padding: 8px;
     background: #f5f5f5;
     border-color: rgb(200, 200, 200);
-    
+    box-shadow: 2px 2px 8px rgba(200, 200, 200, 0.5);
 }
 
-.menu .create-tasks button {
+.menu #create-todo button {
     position: relative;
-
     width: 100%;
-    min-width: 100px;
     height: 5vh;
+    min-width: 100px;
 
     border-radius: 4px;
     border: none;
@@ -309,13 +368,13 @@ h3 {
     font-size: 1.6rem;
     font-weight: bold;
     color: white;
-    background: #60CDFF;
 
+    background: #60CDFF;
     cursor: pointer;
     transition: linear 0.3s;
 }
 
-.menu .create-tasks button:hover {
+.menu #create-todo button:hover {
     background: #6B7897;
     opacity: 0.8;
 }

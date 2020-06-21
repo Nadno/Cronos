@@ -1,48 +1,50 @@
 /* CHECKBOX STYLE */
 
-.tasks-container input[type=checkbox] + label {
+.todo-list input[type=checkbox] + label {
     display: grid;
     margin: 0 0.2em;
     cursor: pointer;
-    padding: 8px 0;
-    font-size: 1.6rem;
+    padding: 4px 0;
+    font-size: 1.5rem;
 }
 
-.tasks-container input[type=checkbox] {
+.todo-list input[type=checkbox] {
     display: none;
 }
 
-.tasks-container input[type=checkbox] + label:before {
+.todo-list input[type=checkbox] + label:before {
     content:"\2714";
     border: 2px solid #60CDFF;
     display:inline-block;
     width: 1em;
     min-width: 18px;
     height: 1em;
-    padding-left: 0.2em;
+
+    padding-left: 0.2rem;
     padding-bottom: 0.3em;
     margin-right: 0.2em;
-    vertical-align: bottom;
+
+    vertical-align: middle;
     color: transparent;
     transition: 0.3s;
 }
 
-.tasks-container input[type=checkbox] + label:active:before {
+.todo-list input[type=checkbox] + label:active:before {
     transform: scale(0.1);
 }
 
-.tasks-container input[type=checkbox]:checked + label:before {
+.todo-list input[type=checkbox]:checked + label:before {
     background: #60CDFF;
     border-color: #60CDFF;
     color: #fff;
 }
 
-.tasks-container input[type=checkbox]:disabled + label:before {
+.todo-list input[type=checkbox]:disabled + label:before {
     transform:scale(1);
     border-color: #aaa;
 }
 
-.tasks-container input[type=checkbox]:checked + label:before {
+.todo-list input[type=checkbox]:checked + label:before {
     transform:scale(1);
     background-color: #60CDFF;
     border-color: #60CDFF;

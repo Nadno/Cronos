@@ -1,50 +1,100 @@
-import { getItems } from './save';
-import menuNavigation, { handleCreateTask, handleDeleteTask, handleCheckTask } from './menu';
+import { getData } from './save';
+import Menu from './components/Menu';
+import EventMenu from './components/EventMenu';
 
 const menuElement = document.querySelector('div.menu');
-const data = getItems(true);
+const data = getData(true);
+const menu = Menu();
+const eventMenu = EventMenu();
+const eventMenuCheck = document.getElementById('event-menu');
 
-document.querySelector('.select-month').onchange = () => {
-    getItems();
-    console.log(Number(document.getElementById('select-month').value));
+document.querySelector('.select-month').onchange = e => {
+    e.preventDefault();
+
+    menu.handleBackMenu(data);
+    getData();
 };
 
 document.querySelector('ul.month-days').addEventListener('click', function (e) {
-    if (e.target.value !== undefined) {
-        const { selectedday, weekday } = e.target.dataset;
-        menuNavigation(Number(selectedday), weekday, data);
-    }
+    if (e.target.id !== '') {
+        eventMenuCheck.checked = false;
+
+        const { weekday } = e.target.dataset;
+        const selectedday = e.target.id;
+
+        data.selectedMonth = Number(document.getElementById('select-month').value);
+        data.selectedDay = Number(selectedday);
+        data.weekDay = weekday;
+
+        menu.navigation(data);
+    };
 });
 
-document.querySelector('#create-task').addEventListener('submit', e => {
+document.querySelector('.events').onclick = () => {
+    if (Number(menuElement.dataset.day) > 0) {
+        document.getElementById('create-event-check').checked = true
+    };
+};
+
+document.getElementById('create-todo').addEventListener('submit', e => {
     e.preventDefault();
 
-    const selectedDay = menuElement.dataset.day;
+    data.selectedDay = Number(menuElement.dataset.day);
 
-    handleCreateTask(selectedDay, data);
+    menu.handleCreateToDo(data);
 });
 
-document.querySelector('#render-todo').onchange = e => {
-     e.preventDefault();
+document.getElementById('todo-container').onchange = e => {
+    e.preventDefault();
 
     const className = e.target.getAttribute('class');
 
     if (className === 'task' || className === 'task-checkbox') {
-        const indexTask = Number(e.target.getAttribute('id'));
-        const checkItem = e.target.checked;
+        data.indexTask = Number(e.target.getAttribute('id'));
+        data.checkItem = e.target.checked;
 
-        handleCheckTask(data, indexTask, checkItem);
+        menu.handleCheckToDo(data);
     }
 };
 
-document.querySelector('#render-todo').addEventListener('click', e => {
+document.getElementById('todo-container').addEventListener('click', e => {
     const className = e.target.getAttribute('class');
 
     if (className === 'delete') {
-        const indexTask = Number(e.target.dataset.index);
-        
-        handleDeleteTask(data, indexTask);
+        data.indexTask = Number(e.target.dataset.index);
+
+        menu.handleDeleteToDo(data);
     }
 });
 
-console.log(data);
+document.getElementById('create-event').onsubmit = e => {
+    e.preventDefault();
+
+    data.selectedDay = Number(menuElement.dataset.day);
+    data.weekDay = menuElement.dataset.weekday;
+
+    eventMenu.handleCreateEvent(data);
+
+    if(eventMenuCheck.checked === true) {
+        data.selectedMonth = Number(document.getElementById('select-month').value);
+        data.selectedDay = menuElement.dataset.day;
+        data.weekDay = menuElement.dataset.weekday;
+
+        eventMenu.handleShowEvents(data);
+    };
+};
+
+document.querySelector('.bell').onclick = () => {
+    const classNames = document.getElementById(menuElement.dataset.day).className;
+    const className = classNames.split(" ", 2);
+
+    if (className[1] === 'has-event' || className[1] === 'has-todo-and-event' || menuElement.id === 'Daily') {
+        eventMenuCheck.checked = true;
+
+        data.selectedMonth = Number(document.getElementById('select-month').value);
+        data.selectedDay = menuElement.dataset.day;
+        data.weekDay = menuElement.dataset.weekday;
+
+        eventMenu.handleShowEvents(data);
+    };
+};
