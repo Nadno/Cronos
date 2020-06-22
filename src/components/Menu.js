@@ -1,7 +1,7 @@
 import ItemsController from '../itemsController';
 
 export default function Menu() {
-    const returnButton = document.querySelector('.return');
+    const returnButton = document.querySelector('.return-to-daily');
     const menuElement = document.querySelector('.menu');
 
     const title = menuElement.querySelector('#menu-title');
@@ -26,12 +26,15 @@ export default function Menu() {
 
     const handleBackMenu = data => {
         document.getElementById(menuElement.dataset.day).classList.remove('selected-day');
+        
         menuElement.dataset.day = 'Daily';
         menuElement.dataset.weekday = 'Daily';
         menuElement.id = 'Daily';
 
-        legend.innerText = 'Tarefas diárias:';
         returnButton.style.display = 'none';
+        returnButton.classList.remove('on-todo');
+
+        legend.innerText = 'Tarefas diárias:';
         title.innerText = '';
         textarea.value = '';
 
@@ -63,7 +66,6 @@ export default function Menu() {
 
             itemsController.showToDos(data);
             returnButton.style.display = 'initial';
-            returnButton.addEventListener('click', () => handleBackMenu(data));
         };
 
     };

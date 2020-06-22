@@ -1,4 +1,4 @@
-import { saveToDos } from './save';
+import { saveItems } from './save';
 import { monthTotalDays } from './Date';
 import { eventConstructor } from './components/components';
 import './components/ToDo';
@@ -12,7 +12,7 @@ export default function ItemsController() {
         if (day === 'Daily') return day;
 
         const index = document.getElementById(day).dataset.indexday;
-
+        console.log(index, day);
         return index;
     };
 
@@ -53,17 +53,17 @@ export default function ItemsController() {
         if (index === 'Daily') {
             items.Daily[indexTask].checked = checkItem;
         } else {
-            Days[index].Tasks[indexTask].checked = checkItem;
+            Days[Number(index)].Tasks[indexTask].checked = checkItem;
         }
 
-        saveToDos(items, calendar);
+        saveItems(items, calendar);
     };
 
     const createToDo = data => {
         const { selectedDay, selectedMonth, items, calendar } = data;
 
         const text = document.querySelector('.todo-text').value;
-        const index = getIndexDay();
+        let index = getIndexDay();
         const task = {
             text,
             checked: false
@@ -71,32 +71,31 @@ export default function ItemsController() {
 
         if (index === 'Daily') {
             items.Daily.push(task);
-            saveToDos(items, calendar);
+            saveItems(items, calendar);
+    
         } else {
             const Days = items.Months[selectedMonth].Days;
+            
+            if ((selectedDay >= calendar.day || selectedMonth > calendar.nMonth) && text.length > 0) {
+                index = getIndexDay();
 
-            if ((selectedDay >= calendar.day || selectedMonth > calendar.nMonth) && text.length > 4) {
                 if (index >= 0) {
                     Days[Number(index)].Tasks.push(task);
-
-                    if (Days[Number(index)].Events.length > 0) {
-                        saveToDos(items, calendar, true);
-                    } else {
-                        saveToDos(items, calendar);
-                    };
+                    
+                     saveItems(items, calendar);
                 } else {
-                    const day = { Day: selectedDay, Events: [], Tasks: [task] };
-
+                    const day = { Day: selectedDay, Tasks: [task] };
+                    
                     Days.push(day);
-                    saveToDos(items, calendar, true);
+                    saveItems(items, calendar, true);
                 };
             };
         };
-
+        
         showToDos(data);
     };
 
-    const deleteTodo = data => {
+    const deleteToDo = data => {
         const { selectedMonth, items, calendar, indexTask } = data;
         const index = getIndexDay();
 
@@ -104,22 +103,51 @@ export default function ItemsController() {
             const dailyList = items.Daily;
 
             dailyList.splice(indexTask, 1);
-            saveToDos(items, calendar);
+            saveItems(items, calendar);
         } else {
             const Days = items.Months[selectedMonth].Days;
 
             if (Days[index].Tasks.length === 1) {
                 Days.splice(index, 1);
 
-                saveToDos(items, calendar, true);
+                saveItems(items, calendar, true);
             } else {
                 Days[index].Tasks.splice(indexTask, 1);
 
-                saveToDos(items, calendar);
+                saveItems(items, calendar);
             };
         }
 
         showToDos(data);
+    };
+
+    const showEvents = ({ items, weekDay, calendar, selectedMonth, selectedDay }) => {
+        const month = calendar.month[selectedMonth];
+        const eventList = document.querySelector('.event-list');
+
+        eventList.innerHTML = '';
+
+        if(selectedDay === 'Daily') {
+            items.Months[selectedMonth].Events.map((item, index) => {
+                const newWeekDay = document.getElementById(item.day).dataset.weekday;
+                const eventLi = eventConstructor(item.name, item.day, item.description, newWeekDay, index);
+
+                document.getElementById('event-menu-title').innerText = month;
+
+                eventList.appendChild(eventLi);
+            });
+        } else {
+            items.Months[selectedMonth].Events.map((item, index) => {
+                if(item.day === Number(selectedDay)) {
+                    const eventLi = eventConstructor(item.name, item.day, item.description, weekDay, index);
+
+                    document.getElementById('event-menu-title').innerText = `Dia ${item.day} de ${month}`;
+                    eventLi.querySelector('h4').innerText = `${weekDay}`;
+
+                    eventList.appendChild(eventLi);
+                };
+            });
+        };
     };
 
     const createEvent = (data, name, alert, description) => {
@@ -155,37 +183,15 @@ export default function ItemsController() {
         Events.push(event);
         if (monthVerify < 0) EventsOnMonths.push(selectedMonth);
 
-        saveToDos(items, calendar, true);
+        saveItems(items, calendar, true);
     };
 
-    const showEvents = ({ items, weekDay, calendar, selectedMonth, selectedDay }) => {
-        const index = getIndexDay();
-        const month = calendar.month[selectedMonth];
-        const eventList = document.querySelector('.event-list');
+    const deleteEvent = ({ data, id }) => {
+        const Month = data.items.Months[data.selectedMonth];
+        Month.Events.splice(id, 1);
 
-        eventList.innerHTML = '';
-
-        if(selectedDay === 'Daily') {
-            items.Months[selectedMonth].Events.map(item => {
-                const newWeekDay = document.getElementById(item.day).dataset.weekday;
-                const eventLi = eventConstructor(item.name, item.day, item.description, newWeekDay);
-
-                document.getElementById('event-menu-title').innerText = month;
-
-                eventList.appendChild(eventLi);
-            });
-        } else {
-            items.Months[selectedMonth].Events.map(item => {
-                if(item.day === Number(selectedDay)) {
-                    const eventLi = eventConstructor(item.name, item.day, item.description, weekDay);
-
-                    document.getElementById('event-menu-title').innerText = `Dia ${item.day} de ${month}`;
-                    eventLi.querySelector('h4').innerText = `${weekDay}`;
-
-                    eventList.appendChild(eventLi);
-                };
-            });
-        };
+        saveItems(data.items, data.calendar, true);
+        showEvents(data);
     };
 
     const dailyReset = ({ items, calendar, selectedMonth }) => {
@@ -199,7 +205,7 @@ export default function ItemsController() {
                 items.Daily[key].checked = false;
             };
 
-            saveToDos(items, calendar);
+            saveItems(items, calendar);
         }
 
         showToDos({ items, selectedMonth });
@@ -209,8 +215,9 @@ export default function ItemsController() {
     itemsController.showToDos = data => showToDos(data);
     itemsController.ToDoCheck = data => ToDoCheck(data);
     itemsController.createToDo = data => createToDo(data);
-    itemsController.deleteTodo = data => deleteTodo(data);
+    itemsController.deleteToDo = data => deleteToDo(data);
     itemsController.createEvent = (data, name, alert, description) => createEvent(data, name, alert, description);
+    itemsController.deleteEvent = data => deleteEvent(data);
     itemsController.dailyReset = data => dailyReset(data);
 
     return itemsController;

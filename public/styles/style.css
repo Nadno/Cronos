@@ -161,8 +161,8 @@ h3 {
 }
 
 .month.has-event {
-    background-image: linear-gradient(#CF841B, #cf841b8a);
-    box-shadow: 4px 4px 12px #CF841B;
+    background-image: linear-gradient(#ff8c00, #cf841b9a);
+    box-shadow: 4px 4px 12px #ff8c00;
 }
 
 .month.has-todo-and-event {
@@ -194,24 +194,33 @@ h3 {
     width: 100%;
     min-width: 320px;
     max-width: 420px;
-    padding: 16px;
+    min-height: 440px;
     font-size: 1.8rem;
     color: #6B7897;
     background: #fff;
     box-shadow: 1px 1px 6px rgb(200, 200, 200);
     transition: all 0.4s linear;
+    overflow: hidden;
 }
 
 .header-menu {
+    position: relative;
     width: 100%;
-    margin-bottom: 8px;
+
     display: flex;
     justify-content: space-between;
+
+    padding: 8px 16px;
+    margin-bottom: 8px;
+    background-color: white;
+    border-bottom: 1px solid rgb(200, 200, 200);
+
+    z-index: 5;
 }
 
-.return,
-.events,
-.bell {
+.return-to-daily,
+.to-create-events,
+.to-event {
     position: relative;
     width: 40px;
     height: 40px;
@@ -223,7 +232,7 @@ h3 {
     transition: 1s;
 }
 
-.return {
+.return-to-daily {
     display: none;
 }
 
@@ -232,9 +241,9 @@ h3 {
     height: 40px;
 }
 
-.return:hover,
-.events:hover,
-.bell:hover {
+.return-to-daily:hover,
+.to-create-events:hover,
+.to-event:hover {
     box-shadow: 2px 2px 8px rgba(200, 200, 200, 0.4);
     background-image: linear-gradient(#fff, rgba(200, 200, 200, 0.4));
 }
@@ -245,15 +254,16 @@ h3 {
 }
 
 #todo-container fieldset {
+    padding: 8px;
     border: none;
 }
 
 .todo-list {
-    height: 25vh;
+    height: 40vh;
     width: 100%;
     min-width: 200px;
     max-width: 380px;
-    max-height: 280px;
+    max-height: 254px;
 
     overflow-y: scroll;
     overflow-x: hidden;
@@ -264,6 +274,15 @@ h3 {
     border: 1px rgb(200, 200, 200) solid;
     box-shadow: 1px 1px 6px rgb(220, 220, 220);
     transition: 0.5s;
+}
+
+.todo-list::-webkit-scrollbar {
+    scroll-behavior: smooth;
+    width: 8px;
+}
+
+.todo-list::-webkit-scrollbar-thumb {
+    background-color: rgb(200, 200, 200);
 }
 
 .todo-list label {
@@ -292,7 +311,7 @@ h3 {
     grid-area: a;
 }
 
-.todo-list .delete {
+.todo-list .todo-delete {
     position: relative;
     width: 32px;
     height: 100%;
@@ -318,17 +337,13 @@ h3 {
     grid-area: c;
 }
 
-.todo-list .delete:hover {
+.todo-list .todo-delete:hover {
     color: red;
-}
-
-.menu .todo-list::-webkit-scrollbar {
-    display: none;
 }
 
 .menu #create-todo {
     width: 100%;
-    margin-top: 14px;
+    padding: 8px;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -358,7 +373,7 @@ h3 {
 .menu #create-todo button {
     position: relative;
     width: 100%;
-    height: 5vh;
+    height: 32px;
     min-width: 100px;
 
     border-radius: 4px;

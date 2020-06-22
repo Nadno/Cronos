@@ -10,15 +10,11 @@ const beforeThisMonth = (first, totalDays) => {
     };
 };
 
-const setClasses = ({ saveDay, saveIndex, saveEvent }, liDay, li, calendar, selectedDay, selectedMonth) => {
-    const { day, nMonth } = calendar;
+const setClass = ({ saveDay, saveEvent }, liDay, li, calendar, selectedDay, selectedMonth) => {
+    const { day } = calendar;
     let indexDay;
 
-    if (saveDay !== null) {
-        const index = saveDay.indexOf(liDay);
-
-        if (index !== -1) indexDay = saveIndex[index];
-    };
+    if (saveDay !== undefined && saveDay.length >= 0) indexDay = saveDay.indexOf(liDay);
 
     if (liDay === day && selectedMonth === calendar.nMonth) {
         li.classList.add('today');
@@ -26,10 +22,10 @@ const setClasses = ({ saveDay, saveIndex, saveEvent }, liDay, li, calendar, sele
     };
 
     if (liDay === selectedDay) li.classList.add('selected-day');
-
+    
     if (indexDay >= 0) {
         li.dataset.indexday = indexDay;
-
+        
         if (saveEvent !== undefined && saveEvent.indexOf(liDay) >= 0) {
             li.title = 'há tarefas e eventos para este dia';
             li.classList.add('has-todo-and-event');
@@ -46,13 +42,12 @@ const setClasses = ({ saveDay, saveIndex, saveEvent }, liDay, li, calendar, sele
 };
 
 export default function calendarRender({ calendar, items }, itemsIndex) {
-    const { day, days, month, year } = calendar;
+    const { days, month, year } = calendar;
 
     const selectedMonth = Number(document.getElementById('select-month').value);
     const selectedDay = Number(document.querySelector('.menu').dataset.day);
 
     const monthDays = document.querySelector('.month-days');
-    const eventCheck = items.Months[selectedMonth].Days;
     let indexWeekDay = items.Location.firstDays[selectedMonth];
     let totalDays;
     let lastMonth;
@@ -68,7 +63,7 @@ export default function calendarRender({ calendar, items }, itemsIndex) {
     for (let liDay = 1; liDay <= totalDays; liDay++) {
         let li = dayConstructor(liDay, 'month');
 
-        li = setClasses(itemsIndex, liDay, li, calendar, selectedDay, selectedMonth);
+        li = setClass(itemsIndex, liDay, li, calendar, selectedDay, selectedMonth);
         li.dataset.weekday = days[indexWeekDay];
         document.querySelector('ul.month-days').appendChild(li);
 

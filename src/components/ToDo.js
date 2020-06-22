@@ -25,7 +25,7 @@ class NewTask extends HTMLElement {
         this.label.setAttribute('for', `${i}`);
         this.label.classList.add('task');
 
-        this.deleteTask.classList.add('delete');
+        this.deleteTask.classList.add('todo-delete');
         this.deleteTask.type = 'button';
         this.deleteTask.dataset.index = i;
 

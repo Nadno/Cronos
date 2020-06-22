@@ -17,27 +17,23 @@
         Cronos
     </header>
 
-    <input type="checkbox" id="create-event-check" />
-
     <main>
         <section>
             <div id="Daily" class="menu" data-day="Daily">
-                <input type="checkbox" id="event-menu" />
-
                 <header class="header-menu">
                     <div class="return-container">
-                        <button class="return" type="button" title="Início">
-                            <img src="assets/home.svg" alt="Início">
+                        <button class="return-to-daily" type="button" title="Início">
+                            <img class="button-img" src="" alt="Início">
                         </button>
                     </div>
 
                     <div class="events-container">
-                        <button class="bell" type="button" title="Eventos">
+                        <button class="to-event" type="button" title="Eventos">
                             <img src="assets/bell.svg" alt="Eventos">
                         </button>
                     </div>
 
-                    <button class="events" type="button" title="Criar Eventos">
+                    <button class="to-create-events" type="button" title="Criar Eventos">
                         <img src="assets/calendar.svg" alt="Criar Eventos">
                     </button>
                 </header>
@@ -63,14 +59,9 @@
 
                 <div class="event-container">
                     <h3>Eventos</h3>
-                    <label class="arrow-left" for="event-menu">
-                        <img src="assets/arrow-left.svg" alt="retornar" title="retornar">
-                    </label>
-                    <div class="event-list-container">
-                        <h3 id="event-menu-title"></h3>
-                        <ul class="event-list">                          
-                        </ul>
-                    </div>
+                    <h3 id="event-menu-title"></h3>
+                    <ul class="event-list">
+                    </ul>
                 </div>
             </div>
         </section>
@@ -114,9 +105,9 @@
 
     <section class="create-event-blur">
         <form id="create-event">
-            <label class="arrow-left" for="create-event-check">
+            <button class="create-event-return" type="button">
                 <img src="assets/arrow-left.svg" alt="retornar" title="retornar">
-            </label>
+            </button>
 
             <h2>20 de junho de 2020</h2>
 
@@ -142,7 +133,7 @@
                     placeholder="Digite uma descrição para o evento"></textarea>
             </fieldset>
 
-            <button type="submit">Criar</button>
+            <button type="submit" class="create-event">Criar</button>
         </form>
     </section>
 
