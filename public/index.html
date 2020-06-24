@@ -14,11 +14,22 @@
 
 <body>
     <header class="cronos">
-        Cronos
+        <h1>Cronos</h1>
+        
+        <section class="notifications-container">
+            <div class="show-notifications">
+                <img class="notification-alert" src="assets/chevron-down.svg" alt="">
+                <div class="new-notification"></div>
+            </div>
+
+            <ul id="notifications">
+
+            </ul>
+        </section>
     </header>
 
     <main>
-        <section>
+        <section class="menu-container">
             <div id="Daily" class="menu" data-day="Daily">
                 <header class="header-menu">
                     <div class="return-container">
@@ -38,24 +49,25 @@
                     </button>
                 </header>
 
-                <h2 id="menu-title"></h2>
+                <div class="to-dos">
+                    <h2 id="menu-title"></h2>
+                    <form id="todo-container">
+                        <fieldset>
+                            <legend class="todo-legend">Tarefas diárias:</legend>
+                            <ul class="todo-list">
 
-                <form id="todo-container">
-                    <fieldset>
-                        <legend class="todo-legend">Tarefas diárias:</legend>
-                        <ul class="todo-list">
+                            </ul>
+                        </fieldset>
+                    </form>
 
-                        </ul>
-                    </fieldset>
-                </form>
-
-                <form id="create-todo">
-                    <fieldset>
-                        <legend>Criar uma tarefa:</legend>
-                        <textarea maxlength="120" class="todo-text" placeholder="Digite uma tarefa"></textarea>
-                        <button type="submit">Criar</button>
-                    </fieldset>
-                </form>
+                    <form id="create-todo">
+                        <fieldset>
+                            <legend>Criar uma tarefa:</legend>
+                            <textarea maxlength="120" class="todo-text" placeholder="Digite uma tarefa"></textarea>
+                            <button type="submit">Criar</button>
+                        </fieldset>
+                    </form>
+                </div class="to-dos">
 
                 <div class="event-container">
                     <h3>Eventos</h3>
@@ -68,6 +80,10 @@
 
         <section class="calendar-container">
             <form class="select-month">
+                <select name="year" id="select-year">
+                    
+                </select>
+
                 <select name="months" id="select-month">
                     <option value="0">Janeiro</option>
                     <option value="1">Fevereiro</option>
@@ -84,21 +100,20 @@
                 </select>
             </form>
 
-            <h1></h1>
+            <h1 id="calendar-title"></h1>
 
             <ul class="week-days">
-                <li class="days">Domingo</li>
-                <li class="days">Segunda</li>
-                <li class="days">Terça</li>
-                <li class="days">Quarta</li>
-                <li class="days">Quinta</li>
-                <li class="days">Sexta</li>
-                <li class="days">Sabádo</li>
+                <li class="days" title="Domingo">Dom</li>
+                <li class="days" title="Segunda">Seg</li>
+                <li class="days" title="Terça">Ter</li>
+                <li class="days" title="Quarta">Qua</li>
+                <li class="days" title="Quinta">Qui</li>
+                <li class="days" title="Sexta">Sex</li>
+                <li class="days" title="Sabádo">Sab</li>
             </ul>
 
 
             <ul class="month-days">
-
             </ul>
         </section>
     </main>
@@ -109,7 +124,7 @@
                 <img src="assets/arrow-left.svg" alt="retornar" title="retornar">
             </button>
 
-            <h2>20 de junho de 2020</h2>
+            <h2 id="create-event-title"></h2>
 
             <fieldset>
                 <legend>Criar evento:</legend>

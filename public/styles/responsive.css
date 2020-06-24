@@ -2,6 +2,11 @@
     font-size: 1.2rem;
 }
 
+.calendar-container .month-days, .week-days {
+    grid-template-columns: repeat(7, 50px);
+    grid-template-rows: repeat(6, 50px);
+}
+
 .calendar-container .month, .before {
     font-size: 1.4rem;
 }

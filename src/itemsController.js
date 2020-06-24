@@ -12,7 +12,6 @@ export default function ItemsController() {
         if (day === 'Daily') return day;
 
         const index = document.getElementById(day).dataset.indexday;
-        console.log(index, day);
         return index;
     };
 
@@ -61,44 +60,55 @@ export default function ItemsController() {
 
     const createToDo = data => {
         const { selectedDay, selectedMonth, items, calendar } = data;
+        const { actualDay, actualMonth, actualYear } = calendar;
+
+        const selectedYear = Number(document.getElementById('select-year').value);
 
         const text = document.querySelector('.todo-text').value;
         let index = getIndexDay();
+
         const task = {
             text,
             checked: false
         };
 
-        if (index === 'Daily') {
-            items.Daily.push(task);
-            saveItems(items, calendar);
-    
-        } else {
-            const Days = items.Months[selectedMonth].Days;
-            
-            if ((selectedDay >= calendar.day || selectedMonth > calendar.nMonth) && text.length > 0) {
-                index = getIndexDay();
+        if (text.length > 0 && text.length <= 120) {
+            if (index === 'Daily') {
+                items.Daily.push(task);
+                saveItems(items, calendar);
+            } else {
+                const Days = items.Months[selectedMonth].Days;
 
-                if (index >= 0) {
-                    Days[Number(index)].Tasks.push(task);
-                    
-                     saveItems(items, calendar);
+                if (selectedDay >= actualDay || selectedMonth > actualMonth || selectedYear > actualYear) {
+
+                    index = getIndexDay();
+
+                    if (index >= 0) {
+                        Days[Number(index)].Tasks.push(task);
+
+                        saveItems(items, calendar);
+                    } else {
+                        const day = { Day: selectedDay, Tasks: [task] };
+
+                        Days.push(day);
+                        saveItems(items, calendar, true);
+
+                    };
                 } else {
-                    const day = { Day: selectedDay, Tasks: [task] };
-                    
-                    Days.push(day);
-                    saveItems(items, calendar, true);
+                    alert('Só é possível criar tarefas a partir do mês atual e do dia atual, demarcado com a cor vermelha!');
                 };
             };
+        } else {
+            alert('Uma tarefa precisa ter no mínimo um caractere e no máximo 120!');
         };
-        
+
         showToDos(data);
     };
 
     const deleteToDo = data => {
         const { selectedMonth, items, calendar, indexTask } = data;
         const index = getIndexDay();
-
+        console.log('daily');
         if (index === 'Daily') {
             const dailyList = items.Daily;
 
@@ -127,7 +137,7 @@ export default function ItemsController() {
 
         eventList.innerHTML = '';
 
-        if(selectedDay === 'Daily') {
+        if (selectedDay === 'Daily') {
             items.Months[selectedMonth].Events.map((item, index) => {
                 const newWeekDay = document.getElementById(item.day).dataset.weekday;
                 const eventLi = eventConstructor(item.name, item.day, item.description, newWeekDay, index);
@@ -138,7 +148,7 @@ export default function ItemsController() {
             });
         } else {
             items.Months[selectedMonth].Events.map((item, index) => {
-                if(item.day === Number(selectedDay)) {
+                if (item.day === Number(selectedDay)) {
                     const eventLi = eventConstructor(item.name, item.day, item.description, weekDay, index);
 
                     document.getElementById('event-menu-title').innerText = `Dia ${item.day} de ${month}`;
@@ -151,7 +161,8 @@ export default function ItemsController() {
     };
 
     const createEvent = (data, name, alert, description) => {
-        const { selectedMonth, selectedDay, items, calendar } = data;
+        const { selectedMonth, selectedDay, selectedYear, items, calendar } = data;
+        const { actualDay, actualMonth, actualYear } = calendar;
 
         const EventsOnMonths = items.Location.EventsOnMonths;
         const monthVerify = EventsOnMonths.indexOf(selectedMonth);
@@ -165,25 +176,30 @@ export default function ItemsController() {
             day: selectedDay,
         };
 
-        if (selectedDay < alert) {
-            const totalDays = monthTotalDays((selectedMonth - 1), calendar.year);
-            const lastMonthDays = alert - selectedDay;
+        const distanceDay = selectedDay - calendar.day;
 
-            event.lastMonth = selectedMonth - 1;
-            event.alertDay = totalDays - lastMonthDays;
-        } else if (selectedDay > alert) {
-            const alertDay = selectedDay - alert;
+        //distanceDay > 5 && 
+        if (selectedDay > actualDay || selectedMonth >= actualMonth || selectedYear > actualYear) {
+            console.log('teste');
+            if (selectedDay < alert) {
+                const totalDays = monthTotalDays((selectedMonth - 1), calendar.year);
+                const lastMonthDays = alert - selectedDay;
 
-            event.alertDay = alertDay;
+                event.lastMonth = selectedMonth - 1;
+                event.alertDay = totalDays - lastMonthDays;
+            } else if (selectedDay > alert) {
+                const alertDay = selectedDay - alert;
 
-        } else {
-            event.alertDay = 1;
+                event.alertDay = alertDay;
+
+            } else {
+                event.alertDay = 1;
+            };
+            if (monthVerify < 0) EventsOnMonths.push(selectedMonth);
+            Events.push(event);
+
+            saveItems(items, calendar, true);
         };
-
-        Events.push(event);
-        if (monthVerify < 0) EventsOnMonths.push(selectedMonth);
-
-        saveItems(items, calendar, true);
     };
 
     const deleteEvent = ({ data, id }) => {
@@ -195,21 +211,20 @@ export default function ItemsController() {
     };
 
     const dailyReset = ({ items, calendar, selectedMonth }) => {
-        const { nMonth, day } = calendar;
+        const { actualDay, actualMonth } = calendar;
 
-        if (day > items.Day || nMonth > items.Month) {
-            items.Month = nMonth;
-            items.Day = day;
+        if (items.Daily.length >= 1) {
+            if (actualDay > items.Location.Day || actualMonth > items.Location.Month) {
+                for (let key in items.Daily) {
+                    items.Daily[key].checked = false;
+                };
 
-            for (let key in items.Daily) {
-                items.Daily[key].checked = false;
+                saveItems(items, calendar);
             };
-
-            saveItems(items, calendar);
-        }
+        };
 
         showToDos({ items, selectedMonth });
-    }
+    };
 
     itemsController.showEvents = data => showEvents(data);
     itemsController.showToDos = data => showToDos(data);

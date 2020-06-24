@@ -1,22 +1,66 @@
 import { getData } from './save';
 import Menu from './components/Menu';
 import EventMenu from './components/EventMenu';
+import EventsController from './eventsController';
+
+const menu = Menu();
+let data = getData(true);
+const eventMenu = EventMenu();
+const eventsController = EventsController();
 
 const menuElement = document.querySelector('div.menu');
-const data = getData(true);
-const menu = Menu();
-const eventMenu = EventMenu();
-const eventMenuCheck = document.getElementById('event-menu');
 const returnButtonImg = document.querySelector('.button-img');
+const notifications = document.getElementById('notifications');
+const notificationsAlert = document.querySelector('.notification-alert');
+
+let notificationsActive = false;
+
+console.log(data);
+
+eventsController.lastLogin(data);
+
+// HEADER
+
+document.querySelector('.notification-alert').addEventListener('click', () => {
+    notifications.classList.toggle('on');
+    notificationsAlert.classList.toggle('on');
+    document.querySelector('.new-notification').classList.remove('on');
+
+    if (data.items?.Notifications?.length >= 1) {
+        eventsController.showNotifications(data);
+    }
+    if(notificationsActive) {
+        notifications.innerHTML = '';
+    }
+
+    notificationsActive = !notificationsActive;
+});
+
+notifications.addEventListener('click', e => {
+    if(e.target.className === 'notification-delete') {
+        const id = Number(e.target.id);
+        
+        eventsController.handleDeleteNotification({ data, id });
+    };
+});
 
 // CALENDAR
+
+
+document.querySelector('main').addEventListener('click', (e) => {
+    if (notificationsActive) {
+        notifications.classList.remove('on');
+        notifications.innerHTML = '';
+        notificationsActive = false;
+    };
+});
 
 document.querySelector('.select-month').onchange = e => {
     e.preventDefault();
 
     eventMenu.handleCloseEventMenu();
+    data = getData();
     menu.handleBackMenu(data);
-    getData();
 };
 
 document.querySelector('ul.month-days').addEventListener('click', (e) => {
@@ -32,7 +76,6 @@ document.querySelector('ul.month-days').addEventListener('click', (e) => {
         data.selectedMonth = Number(document.getElementById('select-month').value);
         data.selectedDay = Number(selectedday);
         data.weekDay = weekday;
-
         menu.navigation(data);
     };
 });
@@ -41,7 +84,11 @@ document.querySelector('ul.month-days').addEventListener('click', (e) => {
 
 document.querySelector('.to-create-events').onclick = () => {
     if (Number(menuElement.dataset.day) > 0) {
+        const day = menuElement.dataset.day;
+        const weekDay = menuElement.dataset.weekday;
+
         document.querySelector('.create-event-blur').classList.toggle('on');
+        document.getElementById('create-event-title').innerText = `Dia ${day} - ${weekDay}`;
     };
 };
 
@@ -64,6 +111,7 @@ document.querySelector('.to-event').onclick = () => {
 
         data.selectedMonth = Number(document.getElementById('select-month').value);
         data.selectedDay = menuElement.dataset.day;
+        data.selectedYear = Number(document.getElementById('select-year').value);
         data.weekDay = menuElement.dataset.weekday;
 
         eventMenu.handleShowEvents(data);
@@ -73,12 +121,12 @@ document.querySelector('.to-event').onclick = () => {
 document.querySelector('.return-to-daily').addEventListener('click', () => {
     const className = document.querySelector('.return-to-daily').className.split(" ", 3);
 
-    if(className.indexOf('on-event') >= 0 && className.indexOf('on-todo') >= 0) {
+    if (className.indexOf('on-event') >= 0 && className.indexOf('on-todo') >= 0) {
         eventMenu.handleCloseEventMenu();
         returnButtonImg.src = 'assets/home.svg';
     } else if (className[1] === 'on-event') {
         eventMenu.handleCloseEventMenu(true);
-    } else if (className[1]  === 'on-todo') {
+    } else if (className[1] === 'on-todo') {
         menu.handleBackMenu(data);
     };
 });
@@ -94,8 +142,6 @@ document.getElementById('create-todo').addEventListener('submit', e => {
 });
 
 document.getElementById('todo-container').onchange = e => {
-    e.preventDefault();
-
     const className = e.target.getAttribute('class');
 
     if (className === 'task' || className === 'task-checkbox') {
@@ -108,7 +154,7 @@ document.getElementById('todo-container').onchange = e => {
 
 document.getElementById('todo-container').addEventListener('click', e => {
     const className = e.target.getAttribute('class');
-
+  
     if (className === 'todo-delete') {
         data.indexTask = Number(e.target.dataset.index);
 
@@ -131,13 +177,11 @@ document.getElementById('create-event').onsubmit = e => {
 
     eventMenu.handleCreateEvent(data);
 
-    if (eventMenuCheck.checked === true) {
-        data.selectedMonth = Number(document.getElementById('select-month').value);
-        data.selectedDay = menuElement.dataset.day;
-        data.weekDay = menuElement.dataset.weekday;
+    data.selectedMonth = Number(document.getElementById('select-month').value);
+    data.selectedDay = menuElement.dataset.day;
+    data.weekDay = menuElement.dataset.weekday;
 
-        eventMenu.handleShowEvents(data);
-    };
+    eventMenu.handleShowEvents(data);
 };
 
 document.querySelector('.event-list').addEventListener('click', e => {

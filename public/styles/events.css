@@ -246,7 +246,9 @@ input {
     transition: 0.6s;
 }
 
-.event-container .event-delete:hover {
+.notification-delete:hover, 
+.event-delete:hover, 
+.todo-delete:hover {
     color: red;
     border-color: red;
 }

@@ -22,18 +22,122 @@ html {
 .cronos {
     width: 100%;
     height: 48px;
+
     background: #60CDFF;
+    padding: 0px 16px;
     color: #F9FAFE;
-    font-weight: bold;
-    font-size: 2.4rem;
+
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
     align-items: center;
 }
 
+.cronos h1 {
+    font-size: 2.6rem;
+}
+
+.cronos .notifications-container {
+    position: relative;
+}
+
+.cronos .notification-alert {
+    width: 24px;
+    height: 24px;
+    cursor: pointer;
+
+    border: 2px solid #fff;
+    border-radius: 50%;
+    transform: rotate(180deg);
+
+    transition: all 0.5s;
+}
+
+.cronos .notification-alert.on {
+    transform: rotate(0deg);
+}
+
+.cronos .show-notification {
+    position: relative;
+}
+
+.cronos .new-notification.on {
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    background-color: red;
+    border-radius: 50%;
+
+    z-index: 5;
+    top: 0;
+    right: 0;
+}
+
+.cronos #notifications {
+    position: fixed;
+    width: 320px;
+    height: 50vh;
+    
+    background-color: #f5f5f5;
+    border: 1px solid rgb(200, 200, 200);
+    box-shadow: 2px 2px 12px rgba(200, 200, 200, 0.8);
+
+    padding: 4px;
+    list-style: none;
+    overflow-y: scroll;
+    overflow-x: hidden;
+
+    z-index: 10;
+    top: 40px;
+    right: 16px;
+    display: none;
+
+    transition: all 0.4s;
+}
+
+.cronos #notifications.on {
+    display: initial;
+}
+
+#notifications::-webkit-scrollbar {
+    scroll-behavior: smooth;
+    width: 6px;
+}
+
+#notifications::-webkit-scrollbar-thumb {
+    background-color: rgb(200, 200, 200);
+}
+
+.cronos .notification {
+    position: relative;
+    font-size: 1.4rem;
+    color: #34485E;
+
+    background-color: #fff;
+    margin-bottom: 8px;
+    padding: 8px;
+
+    box-shadow: 2px 2px 12px rgba(200, 200, 200, 0.5);
+}
+
+.cronos .notification-delete {
+    position: absolute;
+    width: 24px;
+    height: 24px;
+    font-size: 2rem;
+    color: gray;
+
+    background-color: rgba(200, 200, 200, 0);
+    cursor: pointer;
+    border: none;
+
+    top: 1%;
+    right: 1%;
+}
+
 main {
-    width: 100%;
+    max-height: 700px;
     display: flex;
+    
 }
 
 h3 {
@@ -42,15 +146,18 @@ h3 {
 
 .calendar-container {
     position: relative;
+    height: 100%;
     width: 100%;
     max-width: 900px;
     min-width: 400px;
-    height: 90vh;
+    
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
+
     color: #34485E;
+
     margin: 0 16px;
     padding-top: 24px;
     background-color: #fff;
@@ -59,18 +166,20 @@ h3 {
 
 .calendar-container .select-month {
     position: absolute;
-    top: 2%;
-    right: 2%;
-    width: 128px;
+    width: 64px;
     height: 32px;
     margin-bottom: 8px;
+
+    top: 0;
+    right: 0;
 }
 
-.calendar-container #select-month {
+.calendar-container #select-month, #select-year {
     width: 100%;
     height: 100%;
     border: none;
     cursor: pointer;
+
     border-bottom: 1px solid rgb(200, 200, 200);
     background-color: rgba(0, 0, 0, 0);
 }
@@ -79,6 +188,7 @@ h3 {
     height: 40px;
     width: 100%;
     margin-bottom: 24px;
+
     font-size: 3rem;
     text-align: center;
 }
@@ -86,18 +196,23 @@ h3 {
 .week-days {
     position: relative;
     list-style: none;
+
     display: grid;
     grid-template-columns: repeat(7, minmax(46px, 72px));
+
     overflow: hidden;
     text-overflow: ellipsis;
+    cursor: pointer;
 }
 
 .month-days {
     position: relative;
     list-style: none;
+
     display: grid;
     grid-template-columns: repeat(7, 72px);
     grid-template-rows: repeat(6, 72px);
+
     font-size: 1.8rem;
     font-weight: bold;
 }
@@ -132,12 +247,15 @@ h3 {
     height: 60%;
     padding: 4px 8px;
     margin: auto auto;
+
     display: flex;
     align-items: center;
     justify-content: center;
+
     border-radius: 50%;
     border: 1px solid rgba(0, 0, 0, 0);
     color: #6B7897;
+
     transition: 0.5s;
 }
 
@@ -155,19 +273,19 @@ h3 {
     box-shadow: 4px 4px 12px #BD23C2;
 }
 
-.month.today {
-    background-image: linear-gradient(#D9361C, #ff22008a);
-    box-shadow: 4px 4px 12px #D9361C;
-}
-
 .month.has-event {
-    background-image: linear-gradient(#ff8c00, #cf841b9a);
-    box-shadow: 4px 4px 12px #ff8c00;
+    background-image: linear-gradient(#ff7300, #ff730093);
+    box-shadow: 4px 4px 12px #ff7300;
 }
 
 .month.has-todo-and-event {
     background-image: linear-gradient(#39FF14, #37ff1488);
     box-shadow: 4px 4px 12px #39FF14;
+}
+
+.month.today {
+    background-image: linear-gradient(#D9361C, #ff22008a);
+    box-shadow: 4px 4px 12px #D9361C;
 }
 
 .calendar-container .month.selected-day {
@@ -188,12 +306,15 @@ h3 {
 
 /* MENU */
 
+.menu-container {
+    width: 320px;
+}
+
 .menu {
     position: relative;
-    height: 90vh;
-    width: 100%;
-    min-width: 320px;
-    max-width: 420px;
+    height: 100%;
+    width: 320px;
+    max-width: 320px;
     min-height: 440px;
     font-size: 1.8rem;
     color: #6B7897;
@@ -253,8 +374,11 @@ h3 {
     font-weight: bold;
 }
 
-#todo-container fieldset {
+.menu .to-dos {
     padding: 8px;
+}
+
+.menu fieldset {
     border: none;
 }
 
@@ -269,7 +393,6 @@ h3 {
     overflow-x: hidden;
     list-style: none;
 
-    padding: 0 12px 0 6px;
     background: #f5f5f5;
     border: 1px rgb(200, 200, 200) solid;
     box-shadow: 1px 1px 6px rgb(220, 220, 220);
@@ -288,9 +411,11 @@ h3 {
 .todo-list label {
     position: relative;
     width: 100%;
+
     grid-template-areas: "a b c";
     grid-template-columns: 32px 1fr 32px;
     justify-content: center;
+
     transition: 0.2s;
 }
 
@@ -303,8 +428,7 @@ h3 {
 }
 
 .todo-list label:hover {
-    background: #fff;
-    transform: scale(1.03);
+    background: #60cdff50;
 }
 
 .todo-list input {
@@ -315,7 +439,6 @@ h3 {
     position: relative;
     width: 32px;
     height: 100%;
-    
 
     font-weight: bold;
     font-size: 2rem;
@@ -337,13 +460,9 @@ h3 {
     grid-area: c;
 }
 
-.todo-list .todo-delete:hover {
-    color: red;
-}
-
 .menu #create-todo {
     width: 100%;
-    padding: 8px;
+    margin-top: 8px;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -357,8 +476,8 @@ h3 {
 .menu #create-todo textarea {
     position: relative;
     width: 100%;
-    min-width: 284px;
-    max-width: 380px;
+    min-width: 304px;
+    max-width: 304px;
     max-height: 120px;
     min-height: 120px;
 

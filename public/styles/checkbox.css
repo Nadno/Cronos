@@ -49,3 +49,8 @@
     background-color: #60CDFF;
     border-color: #60CDFF;
 }
+
+.todo-list input[type=checkbox]:checked ~ label span {
+    color: gray;
+    text-decoration: line-through;
+}

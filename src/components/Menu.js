@@ -43,12 +43,12 @@ export default function Menu() {
 
     const navigation = data => {
         const { selectedDay, weekDay, calendar, selectedMonth } = data;
-        const { month } = calendar;
+        const { monthName } = calendar;
 
-        const newId = `${selectedDay}-${month[selectedMonth]}`;
+        const newId = `${selectedDay}-${monthName[selectedMonth]}`;
         const id = menuElement.getAttribute('id');
 
-        title.innerText = `${weekDay} - ${selectedDay} de ${month[selectedMonth]}`;
+        title.innerText = `${weekDay} - ${selectedDay} de ${monthName[selectedMonth]}`;
         legend.innerText = 'Suas tarefas:';
         textarea.value = '';
 

@@ -1,8 +1,7 @@
-export const Data = (Year, firstDays, Day, Month) => {
+export const Data = (Year, Day, Month) => {
     return {
         Location: {
             Year,
-            firstDays,
             EventsOnMonths: [],
             Month,
             Day,
