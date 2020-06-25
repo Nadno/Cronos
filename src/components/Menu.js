@@ -1,4 +1,4 @@
-import ItemsController from '../itemsController';
+import ItemsController, { showToDos } from '../itemsController';
 
 export default function Menu() {
     const returnButton = document.querySelector('.return-to-daily');
@@ -38,7 +38,7 @@ export default function Menu() {
         title.innerText = '';
         textarea.value = '';
 
-        itemsController.showToDos(data);
+        showToDos(data);
     };
 
     const navigation = data => {
@@ -64,7 +64,7 @@ export default function Menu() {
             };
             document.getElementById(selectedDay).classList.add('selected-day');
 
-            itemsController.showToDos(data);
+            showToDos(data);
             returnButton.style.display = 'initial';
         };
 

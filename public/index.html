@@ -17,8 +17,8 @@
         <h1>Cronos</h1>
         
         <section class="notifications-container">
-            <div class="show-notifications">
-                <img class="notification-alert" src="assets/chevron-down.svg" alt="">
+            <div class="show-notifications" title="Notificações">
+                <img class="notification-alert" src="assets/chevron-down.svg" alt="Notificações">
                 <div class="new-notification"></div>
             </div>
 
@@ -27,6 +27,11 @@
             </ul>
         </section>
     </header>
+
+    <div id="alerts">
+        <h4></h4>
+        <span></span>
+    </div>
 
     <main>
         <section class="menu-container">
@@ -79,6 +84,30 @@
         </section>
 
         <section class="calendar-container">
+            <div class="color-legend">
+                <h4>Legenda de cores:</h4>
+                <div>
+                    <img src="assets/red-circle.svg" alt="Dia atual tem a cor vermelha" title="Dia atual">
+                    Dia atual.
+                </div>
+                <div>
+                    <img src="assets/cyan-circle.svg" alt="Dia selecionado tem a cor azul" title="Dia selecionado">
+                    Dia selecionado.
+                </div>
+                <div>
+                    <img src="assets/pink-circle.svg" alt="Dia com tarefas tem a cor rosa" title="Dia com tarefa">
+                    Dia com tarefa.
+                </div>
+                <div>
+                    <img src="assets/orange-circle.svg" alt="Dia com eventos tem a cor laranja" title="Dia com evento">
+                    Dia com evento.
+                </div>
+                <div>
+                    <img src="assets/green-circle.svg" alt="Dia com eventos e tarefas tem a cor verde" title="Dia com tarefa e evento">
+                    Dia com tarefa e evento.
+                </div>
+            </div>
+
             <form class="select-month">
                 <select name="year" id="select-year">
                     
@@ -130,7 +159,7 @@
                 <legend>Criar evento:</legend>
 
                 <label for="alert">Quando você quer ser avisado?</label>
-                <select name="event-alert" id="alert">
+                <select name="event-alert" id="alert" required>
                     <option value="0">Selectione um dia</option>
                     <option value="1">Um dia antes</option>
                     <option value="2">Dois dias antes</option>
@@ -141,11 +170,11 @@
 
                 <label for="name">Nome:</label>
                 <input id="name" name="event-name" type="text" maxlength="30"
-                    placeholder="Digite um nome para o evento" />
+                    placeholder="Digite um nome para o evento" required />
 
                 <label for="descricao">Descrição:</label>
                 <textarea name="event-description" id="description" maxlength="220"
-                    placeholder="Digite uma descrição para o evento"></textarea>
+                    placeholder="Digite uma descrição para o evento" required ></textarea>
             </fieldset>
 
             <button type="submit" class="create-event">Criar</button>

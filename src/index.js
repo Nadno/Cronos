@@ -1,35 +1,33 @@
 import { getData } from './save';
 import Menu from './components/Menu';
 import EventMenu from './components/EventMenu';
-import EventsController from './eventsController';
+import NotificationsController, { showNotifications } from './notificationsController';
 
 const menu = Menu();
-let data = getData(true);
 const eventMenu = EventMenu();
-const eventsController = EventsController();
+const NotificationController = NotificationsController();
 
 const menuElement = document.querySelector('div.menu');
 const returnButtonImg = document.querySelector('.button-img');
 const notifications = document.getElementById('notifications');
-const notificationsAlert = document.querySelector('.notification-alert');
 
 let notificationsActive = false;
+let data = getData(true);
 
 console.log(data);
-
-eventsController.lastLogin(data);
+NotificationController.lastLogin(data);
 
 // HEADER
 
 document.querySelector('.notification-alert').addEventListener('click', () => {
-    notifications.classList.toggle('on');
-    notificationsAlert.classList.toggle('on');
-    document.querySelector('.new-notification').classList.remove('on');
+    NotificationController.openNotifications();
 
     if (data.items?.Notifications?.length >= 1) {
-        eventsController.showNotifications(data);
+        showNotifications(data);
     }
     if(notificationsActive) {
+        document.querySelector('.notification-alert').classList.remove('on');
+        notifications.classList.remove('on');
         notifications.innerHTML = '';
     }
 
@@ -40,14 +38,14 @@ notifications.addEventListener('click', e => {
     if(e.target.className === 'notification-delete') {
         const id = Number(e.target.id);
         
-        eventsController.handleDeleteNotification({ data, id });
+        NotificationController.handleDeleteNotification({ data, id });
     };
 });
 
 // CALENDAR
 
 
-document.querySelector('main').addEventListener('click', (e) => {
+document.querySelector('main').addEventListener('click', () => {
     if (notificationsActive) {
         notifications.classList.remove('on');
         notifications.innerHTML = '';

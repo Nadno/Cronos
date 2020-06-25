@@ -1,10 +1,21 @@
-import ItemsController from '../itemsController';
+import ItemsController, { showEvents } from '../itemsController';
 
 export default function EventMenu() {
     const itemsController = ItemsController();
     const eventMenu = {};
 
     const returnButton = document.querySelector('.return-to-daily');
+    const alerts = document.getElementById('alerts');
+    let alertsIsActive = false;
+
+    const destroyAlert = () => (
+        setTimeout(() => {
+            alerts.classList.remove('on');
+            alerts.querySelector('h4').innerText = '';
+            alerts.querySelector('span').innerText = '';
+
+            alertsIsActive = !alertsIsActive;
+        }, 6000));
 
     const handleCreateEvent = data => {
         const name = document.getElementById('name').value;
@@ -15,13 +26,34 @@ export default function EventMenu() {
             if(name.length > 0) {
                 if(description.length > 0) {
                     itemsController.createEvent(data, name, alert, description);
+                } else if (!alertsIsActive) {
+                    alerts.querySelector('h4').innerText = 'Erro ao criar Evento';
+                    alerts.querySelector('span').innerText = 'Dê uma descrição ao evento!';
+                    alerts.classList.add('on');
+                    alertsIsActive = !alertsIsActive;
+
+                    destroyAlert();
                 };
+            } else if (!alertsIsActive) {
+                alerts.querySelector('h4').innerText = 'Erro ao criar Evento';
+                alerts.querySelector('span').innerText = 'Dê um nome ao evento!';
+                alerts.classList.add('on');
+                alertsIsActive = !alertsIsActive;
+
+                destroyAlert();
             };
+        } else if (!alertsIsActive) {
+            alerts.querySelector('h4').innerText = 'Erro ao criar Evento';
+            alerts.querySelector('span').innerText = 'Selecione quando você quer ser avisado!';
+            alerts.classList.add('on');
+            alertsIsActive = !alertsIsActive;
+
+            destroyAlert();
         };
     };
 
     const handleShowEvents = data => {
-        itemsController.showEvents(data);
+        showEvents(data);
         returnButton.style.display = 'initial';
     };
 

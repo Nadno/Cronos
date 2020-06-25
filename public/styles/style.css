@@ -74,12 +74,16 @@ html {
 
 .cronos #notifications {
     position: fixed;
-    width: 320px;
+    width: 35vw;
     height: 50vh;
+    min-width: 260px;
     
     background-color: #f5f5f5;
     border: 1px solid rgb(200, 200, 200);
     box-shadow: 2px 2px 12px rgba(200, 200, 200, 0.8);
+
+    display: flex;
+    flex-direction: column;
 
     padding: 4px;
     list-style: none;
@@ -107,10 +111,22 @@ html {
     background-color: rgb(200, 200, 200);
 }
 
-.cronos .notification {
+.cronos .event-notification {
     position: relative;
     font-size: 1.4rem;
     color: #34485E;
+
+    background-color: #fff;
+    margin-bottom: 8px;
+    padding: 8px;
+
+    box-shadow: 2px 2px 12px rgba(200, 200, 200, 0.5);
+}
+
+.cronos .alert-notification {
+    position: relative;
+    font-size: 1.4rem;
+    color: #6B7897;
 
     background-color: #fff;
     margin-bottom: 8px;
@@ -132,6 +148,43 @@ html {
 
     top: 1%;
     right: 1%;
+}
+
+#alerts {
+    position: absolute;
+    width: 240px;
+
+    padding: 16px;
+    background-color: #fff;
+    box-shadow: 2px 2px 12px rgba(117, 117, 117, 0.5);
+
+    z-index: 20;
+    top: 16px;
+    right: 50%;
+
+    transform: translateX(50%);
+    opacity: 0;
+
+    transition: all 0.5s;
+}
+
+#alerts h4 {
+    color: #D9361C;
+    font-size: 2rem;
+    font-weight: bold;
+
+    text-align: center;
+}
+
+#alerts.on {
+    opacity: 1;
+}
+
+#alerts span {
+    width: 100%;
+    color: #6B7897;
+    font-size: 1.4rem;
+    text-align: center;
 }
 
 main {
@@ -159,7 +212,7 @@ h3 {
     color: #34485E;
 
     margin: 0 16px;
-    padding-top: 24px;
+    padding-top: 48px;
     background-color: #fff;
     box-shadow: 1px 1px 6px rgb(200, 200, 200);
 }
@@ -182,6 +235,30 @@ h3 {
 
     border-bottom: 1px solid rgb(200, 200, 200);
     background-color: rgba(0, 0, 0, 0);
+}
+
+.color-legend {
+    position: absolute;
+
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    font-size: 1.2rem;
+
+    top: 4px;
+    left: 8px;
+}
+
+.color-legend div {
+    display: flex;
+    align-items: center;
+
+    margin: 4px;
+}
+.color-legend div img {
+    width: 20px;
+    height: 20px;
+    margin-right: 4px;
 }
 
 .calendar-container h1 {
