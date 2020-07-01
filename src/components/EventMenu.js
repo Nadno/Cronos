@@ -1,12 +1,12 @@
-import ItemsController, { showEvents } from '../itemsController';
+import EventController from '../eventController';
 
 export default function EventMenu() {
-    const itemsController = ItemsController();
-    const eventMenu = {};
+    const event = EventController();
 
     const returnButton = document.querySelector('.return-to-daily');
     const alerts = document.getElementById('alerts');
-    let alertsIsActive = false;
+
+    let alertsIsActive;
 
     const destroyAlert = () => (
         setTimeout(() => {
@@ -17,6 +17,23 @@ export default function EventMenu() {
             alertsIsActive = !alertsIsActive;
         }, 6000));
 
+    const activeAlert = type => {
+        if(!alertsIsActive) {
+            const err = {
+                eventDescriptionError: "Dê uma descrição ao evento!",
+                eventNameError: "Dê um nome ao evento!",
+                eventAlertError: "Selecione quando você quer ser avisado!",
+             };
+     
+             alerts.querySelector('h4').innerText = 'Erro ao criar a Tarefa';
+             alerts.querySelector('span').innerText = err[type];
+             alerts.classList.add('on');
+             alertsIsActive = !alertsIsActive;
+     
+             destroyAlert()
+        }
+    };
+
     const handleCreateEvent = data => {
         const name = document.getElementById('name').value;
         const alert = Number(document.getElementById('alert').value);
@@ -25,35 +42,20 @@ export default function EventMenu() {
         if(alert > 0) {
             if(name.length > 0) {
                 if(description.length > 0) {
-                    itemsController.createEvent(data, name, alert, description);
-                } else if (!alertsIsActive) {
-                    alerts.querySelector('h4').innerText = 'Erro ao criar Evento';
-                    alerts.querySelector('span').innerText = 'Dê uma descrição ao evento!';
-                    alerts.classList.add('on');
-                    alertsIsActive = !alertsIsActive;
-
-                    destroyAlert();
+                    event.createEvent(data, name, alert, description);
+                } else {
+                    activeAlert(eventDescriptionError);
                 };
-            } else if (!alertsIsActive) {
-                alerts.querySelector('h4').innerText = 'Erro ao criar Evento';
-                alerts.querySelector('span').innerText = 'Dê um nome ao evento!';
-                alerts.classList.add('on');
-                alertsIsActive = !alertsIsActive;
-
-                destroyAlert();
+            } else {
+                activeAlert(eventNameError);
             };
-        } else if (!alertsIsActive) {
-            alerts.querySelector('h4').innerText = 'Erro ao criar Evento';
-            alerts.querySelector('span').innerText = 'Selecione quando você quer ser avisado!';
-            alerts.classList.add('on');
-            alertsIsActive = !alertsIsActive;
-
-            destroyAlert();
+        } else {
+            activeAlert(eventAlertError);
         };
     };
 
     const handleShowEvents = data => {
-        showEvents(data);
+        event.showEvents(data);
         returnButton.style.display = 'initial';
     };
 
@@ -64,14 +66,14 @@ export default function EventMenu() {
         returnButton.classList.remove('on-event');
     };
 
-    const handleDeleteEvent = (DataAndId) => {
-        itemsController.deleteEvent(DataAndId);
+    const handleDeleteEvent = (data, id) => {
+        event.deleteEvent(data, id);
     };
 
-    eventMenu.handleShowEvents = data => handleShowEvents(data);
-    eventMenu.handleCreateEvent = data => handleCreateEvent(data);
-    eventMenu.handleCloseEventMenu = onlyEvent => handleCloseEventMenu(onlyEvent);
-    eventMenu.handleDeleteEvent = DataAndId => handleDeleteEvent(DataAndId);
-
-    return eventMenu;
+    return {
+        handleCreateEvent,
+        handleShowEvents,
+        handleDeleteEvent,
+        handleCloseEventMenu,
+    };
 };

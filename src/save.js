@@ -1,7 +1,7 @@
 import calendarRender, { nextYears } from './calendarRender';
 import ItemsController from './itemsController';
 import { Data } from './Data';
-import calendarGenerator, { localization } from './Date';
+import calendarGenerator from './Date';
 
 export const saveItems = (items, calendar, deleteOrCreateDay = false) => {
     const save = JSON.stringify(items);
@@ -66,7 +66,7 @@ export const getData = (firstCall = false) => {
 
     const Save = searchSave(selectedYear);
    
-    if (Save !== null) {
+    if (Save) {
         const items = parseJson(Save);
         const Days = items.Months[selectedMonth].Days;
 

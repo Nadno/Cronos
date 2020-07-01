@@ -163,7 +163,7 @@ html {
     right: 50%;
 
     transform: translateX(50%);
-    opacity: 0;
+    display: none;
 
     transition: all 0.5s;
 }
@@ -177,7 +177,7 @@ html {
 }
 
 #alerts.on {
-    opacity: 1;
+    display: initial;
 }
 
 #alerts span {
@@ -202,7 +202,7 @@ h3 {
     height: 100%;
     width: 100%;
     max-width: 900px;
-    min-width: 400px;
+    min-width: 420px;
     
     display: flex;
     flex-direction: column;
@@ -245,7 +245,7 @@ h3 {
     align-items: center;
     font-size: 1.2rem;
 
-    top: 4px;
+    bottom: 4px;
     left: 8px;
 }
 
@@ -413,7 +413,7 @@ h3 {
     background-color: white;
     border-bottom: 1px solid rgb(200, 200, 200);
 
-    z-index: 5;
+    z-index: 6;
 }
 
 .return-to-daily,

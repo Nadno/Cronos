@@ -1,10 +1,14 @@
+"use strict"
+
 import { getData } from './save';
 import Menu from './components/Menu';
 import EventMenu from './components/EventMenu';
-import NotificationsController, { showNotifications } from './notificationsController';
+import NotificationsController from './notificationsController';
 
-const menu = Menu();
-const eventMenu = EventMenu();
+let data = getData(true);
+
+const menu = Menu(data);
+const eventMenu = EventMenu(data);
 const NotificationController = NotificationsController();
 
 const menuElement = document.querySelector('div.menu');
@@ -12,7 +16,6 @@ const returnButtonImg = document.querySelector('.button-img');
 const notifications = document.getElementById('notifications');
 
 let notificationsActive = false;
-let data = getData(true);
 
 console.log(data);
 NotificationController.lastLogin(data);
@@ -23,7 +26,7 @@ document.querySelector('.notification-alert').addEventListener('click', () => {
     NotificationController.openNotifications();
 
     if (data.items?.Notifications?.length >= 1) {
-        showNotifications(data);
+        NotificationController.showNotifications(data);
     }
     if(notificationsActive) {
         document.querySelector('.notification-alert').classList.remove('on');
@@ -47,6 +50,7 @@ notifications.addEventListener('click', e => {
 
 document.querySelector('main').addEventListener('click', () => {
     if (notificationsActive) {
+        document.querySelector('.notification-alert').classList.remove('on');
         notifications.classList.remove('on');
         notifications.innerHTML = '';
         notificationsActive = false;
@@ -54,18 +58,25 @@ document.querySelector('main').addEventListener('click', () => {
 });
 
 document.querySelector('.select-month').onchange = e => {
-    e.preventDefault();
-
     eventMenu.handleCloseEventMenu();
-    data = getData();
     menu.handleBackMenu(data);
+
+    data = getData();
 };
 
 document.querySelector('ul.month-days').addEventListener('click', (e) => {
     if (e.target.id !== '') {
+        if(document.body.clientWidth <= 760) {
+            menuElement.classList.toggle('on');
+            menu.handleBackMenu(data);
+            document.querySelector('.return-to-daily').classList.add('close');
+            window.scrollTo(0,0);
+            document.body.style.overflow = 'hidden';
+        } else {
+            document.querySelector('.return-to-daily').classList.add('daily');
+        }
         eventMenu.handleCloseEventMenu();
 
-        document.querySelector('.return-to-daily').classList.add('on-todo');
         returnButtonImg.src = 'assets/home.svg';
 
         const { weekday } = e.target.dataset;
@@ -100,9 +111,9 @@ document.querySelector('.to-event').onclick = () => {
     } else if (className.indexOf('has-todo-and-event') >= 0) {
         eventClass = className[className.indexOf('has-todo-and-event')];
     };
-
+   
     if (eventClass === 'has-event' || eventClass === 'has-todo-and-event' || menuElement.id === 'Daily') {
-        document.querySelector('.return-to-daily').classList.add('on-event');
+        document.querySelector('.return-to-daily').classList.add('back');
         document.querySelector('.event-container').classList.add('on');
 
         returnButtonImg.src = 'assets/arrow-left.svg';
@@ -118,15 +129,17 @@ document.querySelector('.to-event').onclick = () => {
 
 document.querySelector('.return-to-daily').addEventListener('click', () => {
     const className = document.querySelector('.return-to-daily').className.split(" ", 3);
+    const header = menu.returnToDaily();
 
-    if (className.indexOf('on-event') >= 0 && className.indexOf('on-todo') >= 0) {
-        eventMenu.handleCloseEventMenu();
-        returnButtonImg.src = 'assets/home.svg';
-    } else if (className[1] === 'on-event') {
-        eventMenu.handleCloseEventMenu(true);
-    } else if (className[1] === 'on-todo') {
-        menu.handleBackMenu(data);
+    let back;
+    
+    if(className.length > 2) {
+        back = header[className[2]];
+    } else {
+        back = header[className[1]];
     };
+    
+    if(back) back(data);
 });
 
 // ToDos INPUTS
@@ -186,6 +199,6 @@ document.querySelector('.event-list').addEventListener('click', e => {
     if (e.target.className === 'event-delete') {
         const id = Number(e.target.id);
 
-        eventMenu.handleDeleteEvent({ data, id });
+        eventMenu.handleDeleteEvent(id);
     }
 });
