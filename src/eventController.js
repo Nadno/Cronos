@@ -4,14 +4,18 @@ import { monthTotalDays } from './Date';
 import { eventConstructor } from './components/components';
 
 const EventController = () => {
+    const menuElement = document.querySelector('div.menu');
 
-    const showEvents = (data) => {
-        const { items, weekDay, calendar, selectedMonth, selectedDay } = data;
+    const showEvents = data => {
+        const { items, calendar, selectedMonth } = data;
         const month = calendar.monthName[selectedMonth];
-
         const eventList = document.querySelector('.event-list');
+
+        const selectedDay = menuElement.dataset.day;
+        const weekDay = menuElement.dataset.weekday;
+
         eventList.innerHTML = '';
-  
+
         if (selectedDay === 'Daily') {
             document.getElementById('event-menu-title').innerText = month;
 
@@ -73,16 +77,20 @@ const EventController = () => {
 
             Events.push(event);
             saveItems(items, calendar, true);
+
+            return true;
         };
     }
 
     const deleteEvent = (data, id) => {
         const { items, calendar, selectedMonth } = data;
+        console.log(data);
         const Month = items.Months[selectedMonth];
+
         Month.Events.splice(id, 1);
 
         saveItems(items, calendar, true);
-        showEvents();
+        showEvents(data);
     }
 
     return {

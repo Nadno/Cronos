@@ -1,6 +1,9 @@
 "use strict"
 
+import calendarRender from './Date';
 import { getData } from './save';
+
+
 import Menu from './components/Menu';
 import EventMenu from './components/EventMenu';
 import NotificationsController from './notificationsController';
@@ -14,6 +17,7 @@ const NotificationController = NotificationsController();
 const menuElement = document.querySelector('div.menu');
 const returnButtonImg = document.querySelector('.button-img');
 const notifications = document.getElementById('notifications');
+const notificationAlert = document.querySelector('.notification-alert');
 
 let notificationsActive = false;
 
@@ -22,14 +26,14 @@ NotificationController.lastLogin(data);
 
 // HEADER
 
-document.querySelector('.notification-alert').addEventListener('click', () => {
+notificationAlert.addEventListener('click', () => {
     NotificationController.openNotifications();
 
     if (data.items?.Notifications?.length >= 1) {
         NotificationController.showNotifications(data);
     }
-    if(notificationsActive) {
-        document.querySelector('.notification-alert').classList.remove('on');
+    if (notificationsActive) {
+        notificationAlert.classList.remove('on');
         notifications.classList.remove('on');
         notifications.innerHTML = '';
     }
@@ -38,9 +42,9 @@ document.querySelector('.notification-alert').addEventListener('click', () => {
 });
 
 notifications.addEventListener('click', e => {
-    if(e.target.className === 'notification-delete') {
+    if (e.target.className === 'notification-delete') {
         const id = Number(e.target.id);
-        
+
         NotificationController.handleDeleteNotification({ data, id });
     };
 });
@@ -50,7 +54,7 @@ notifications.addEventListener('click', e => {
 
 document.querySelector('main').addEventListener('click', () => {
     if (notificationsActive) {
-        document.querySelector('.notification-alert').classList.remove('on');
+        notificationAlert.classList.remove('on');
         notifications.classList.remove('on');
         notifications.innerHTML = '';
         notificationsActive = false;
@@ -61,16 +65,17 @@ document.querySelector('.select-month').onchange = e => {
     eventMenu.handleCloseEventMenu();
     menu.handleBackMenu(data);
 
+    data.selectedMonth = Number(document.querySelector('.select-month').value);
     data = getData();
 };
 
 document.querySelector('ul.month-days').addEventListener('click', (e) => {
     if (e.target.id !== '') {
-        if(document.body.clientWidth <= 760) {
+        if (document.body.clientWidth <= 760) {
             menuElement.classList.toggle('on');
             menu.handleBackMenu(data);
             document.querySelector('.return-to-daily').classList.add('close');
-            window.scrollTo(0,0);
+            window.scrollTo(0, 0);
             document.body.style.overflow = 'hidden';
         } else {
             document.querySelector('.return-to-daily').classList.add('daily');
@@ -85,6 +90,7 @@ document.querySelector('ul.month-days').addEventListener('click', (e) => {
         data.selectedMonth = Number(document.getElementById('select-month').value);
         data.selectedDay = Number(selectedday);
         data.weekDay = weekday;
+
         menu.navigation(data);
     };
 });
@@ -111,7 +117,7 @@ document.querySelector('.to-event').onclick = () => {
     } else if (className.indexOf('has-todo-and-event') >= 0) {
         eventClass = className[className.indexOf('has-todo-and-event')];
     };
-   
+
     if (eventClass === 'has-event' || eventClass === 'has-todo-and-event' || menuElement.id === 'Daily') {
         document.querySelector('.return-to-daily').classList.add('back');
         document.querySelector('.event-container').classList.add('on');
@@ -132,14 +138,14 @@ document.querySelector('.return-to-daily').addEventListener('click', () => {
     const header = menu.returnToDaily();
 
     let back;
-    
-    if(className.length > 2) {
+
+    if (className.length > 2) {
         back = header[className[2]];
     } else {
         back = header[className[1]];
     };
-    
-    if(back) back(data);
+
+    if (back) back(data);
 });
 
 // ToDos INPUTS
@@ -165,7 +171,7 @@ document.getElementById('todo-container').onchange = e => {
 
 document.getElementById('todo-container').addEventListener('click', e => {
     const className = e.target.getAttribute('class');
-  
+
     if (className === 'todo-delete') {
         data.indexTask = Number(e.target.dataset.index);
 
@@ -187,18 +193,12 @@ document.getElementById('create-event').onsubmit = e => {
     data.weekDay = menuElement.dataset.weekday;
 
     eventMenu.handleCreateEvent(data);
-
-    data.selectedMonth = Number(document.getElementById('select-month').value);
-    data.selectedDay = menuElement.dataset.day;
-    data.weekDay = menuElement.dataset.weekday;
-
-    eventMenu.handleShowEvents(data);
 };
 
 document.querySelector('.event-list').addEventListener('click', e => {
     if (e.target.className === 'event-delete') {
         const id = Number(e.target.id);
 
-        eventMenu.handleDeleteEvent(id);
+        eventMenu.handleDeleteEvent(data, id);
     }
 });

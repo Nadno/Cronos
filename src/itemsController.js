@@ -36,7 +36,7 @@ export default function ItemsController() {
         saveItems(items, calendar);
     }
 
-    const createToDo = ({ selectedDay, selectedMonth, items, calendar } ) => {
+    const createToDo = ({ selectedDay, selectedMonth, items, calendar }) => {
         const Days = items.Months[selectedMonth].Days;
 
         const Daily = ToDo => {
@@ -53,7 +53,6 @@ export default function ItemsController() {
 
         const addToDo = (ToDo, index) => {
             Days[Number(index)].Tasks.push(ToDo);
-
             saveItems(items, calendar);
         }
 
@@ -92,7 +91,7 @@ export default function ItemsController() {
         };
     };
 
-    const dailyReset = ({ items, calendar, selectedMonth }) => {
+    const dailyReset = ({ items, calendar }) => {
         const { actualDay, actualMonth } = calendar;
 
         if (items.Daily.length >= 1) {
@@ -105,6 +104,7 @@ export default function ItemsController() {
             };
         };
 
+        document.querySelector('.todo-list').innerHTML = '';
         showToDos(items.Daily);
     };
 

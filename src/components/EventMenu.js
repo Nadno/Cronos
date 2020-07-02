@@ -1,38 +1,12 @@
 import EventController from '../eventController';
 
+import Alerts from './alerts';
+
 export default function EventMenu() {
     const event = EventController();
+    const alerts = Alerts();
 
     const returnButton = document.querySelector('.return-to-daily');
-    const alerts = document.getElementById('alerts');
-
-    let alertsIsActive;
-
-    const destroyAlert = () => (
-        setTimeout(() => {
-            alerts.classList.remove('on');
-            alerts.querySelector('h4').innerText = '';
-            alerts.querySelector('span').innerText = '';
-
-            alertsIsActive = !alertsIsActive;
-        }, 6000));
-
-    const activeAlert = type => {
-        if(!alertsIsActive) {
-            const err = {
-                eventDescriptionError: "Dê uma descrição ao evento!",
-                eventNameError: "Dê um nome ao evento!",
-                eventAlertError: "Selecione quando você quer ser avisado!",
-             };
-     
-             alerts.querySelector('h4').innerText = 'Erro ao criar a Tarefa';
-             alerts.querySelector('span').innerText = err[type];
-             alerts.classList.add('on');
-             alertsIsActive = !alertsIsActive;
-     
-             destroyAlert()
-        }
-    };
 
     const handleCreateEvent = data => {
         const name = document.getElementById('name').value;
@@ -42,15 +16,17 @@ export default function EventMenu() {
         if(alert > 0) {
             if(name.length > 0) {
                 if(description.length > 0) {
-                    event.createEvent(data, name, alert, description);
+                    const created = event.createEvent(data, name, alert, description);
+
+                    if(created) alerts.activeAlert('EventCreated', 'created');
                 } else {
-                    activeAlert(eventDescriptionError);
+                    alerts.activeAlert('EventError', 'eventDescriptionError');
                 };
             } else {
-                activeAlert(eventNameError);
+                alerts.activeAlert('EventError', 'eventNameError');
             };
         } else {
-            activeAlert(eventAlertError);
+            alerts.activeAlert('EventError', 'eventAlertError');
         };
     };
 
@@ -66,8 +42,8 @@ export default function EventMenu() {
         returnButton.classList.remove('on-event');
     };
 
-    const handleDeleteEvent = (data, id) => {
-        event.deleteEvent(data, id);
+    const handleDeleteEvent = ({ items, calendar, selectedMonth }, id) => {
+        event.deleteEvent({ items, calendar, selectedMonth }, id);
     };
 
     return {

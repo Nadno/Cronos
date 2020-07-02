@@ -1,42 +1,17 @@
 import ItemsController from '../itemsController';
 import EventMenu from './EventMenu';
 
+import MenuRender from '../menuRender';
+import Alerts from './alerts';
+
 export default function Menu() {
+    const render = MenuRender();
+
     const itemsController = ItemsController();
     const eventMenu = EventMenu();
+    const alerts = Alerts();
 
-    const returnButton = document.querySelector('.return-to-daily');
-    const returnButtonImg = document.querySelector('.button-img');
     const menuElement = document.querySelector('.menu');
-
-    const title = menuElement.querySelector('#menu-title');
-    const legend = menuElement.querySelector('.todo-legend');
-    const textarea = document.querySelector('.todo-text');
-
-    let alertsIsActive;
-
-    const destroyAlert = () => (
-        setTimeout(() => {
-            alerts.classList.remove('on');
-            alerts.querySelector('h4').innerText = '';
-            alerts.querySelector('span').innerText = '';
-
-            alertsIsActive = !alertsIsActive;
-        }, 6000));
-
-    const activeAlert = (type) => {
-        const err = {
-            dayError: "Uma tarefa só pode ser criada a partir do mês atual e do dia atual, demarcado com a cor vermelha!",
-            lengthError: "Uma tarefa precisa de no mínimo um caractere e pode ter no máximo 120 caracteres!",
-        };
-
-        alerts.querySelector('h4').innerText = 'Erro ao criar a Tarefa';
-        alerts.querySelector('span').innerText = err[type];
-        alerts.classList.add('on');
-        alertsIsActive = !alertsIsActive;
-
-        destroyAlert()
-    };
 
     const getIndexDay = () => {
         const day = document.querySelector('.menu').dataset.day;
@@ -92,12 +67,12 @@ export default function Menu() {
                 };
 
                 handleShowToDos(data);
-            } else if (!alertsIsActive) {
-                activeAlert('dayError');
+            } else {
+                alerts.activeAlert('ToDo', 'dayError');
             };
 
-        } else if (!alertsIsActive) {
-            activeAlert('lengthError');
+        } else {
+            alerts.activeAlert('ToDo', 'lengthError');
         }
     };
 
@@ -122,53 +97,38 @@ export default function Menu() {
         itemsController.ToDoCheck(data, index);
     };
 
-    const handleBackMenu = data => {
-        document.getElementById(menuElement.dataset.day).classList.remove('selected-day');
+    const handleBackMenu = () => render.setMenuDaily();
 
-        menuElement.dataset.day = 'Daily';
-        menuElement.dataset.weekday = 'Daily';
-        menuElement.id = 'Daily';
-
-        returnButton.style.display = 'none';
-        returnButton.classList.remove('daily');
-
-        legend.innerText = 'Tarefas diárias:';
-        title.innerText = '';
-        textarea.value = '';
-
-        handleShowToDos(data, true);
-    };
-
-    const navigation = data => {
-        const { selectedDay, weekDay, items, calendar, selectedMonth } = data;
+    const navigation = ({ selectedDay, weekDay, items, calendar, selectedMonth }) => {
         const { monthName } = calendar;
-
-        const newId = `${selectedDay}-${monthName[selectedMonth]}`;
         const id = menuElement.getAttribute('id');
-
-        title.innerText = `${weekDay} - ${selectedDay} de ${monthName[selectedMonth]}`;
-        legend.innerText = 'Suas tarefas:';
-        textarea.value = '';
-
-        menuElement.id = newId;
-        menuElement.dataset.day = selectedDay;
-        menuElement.dataset.weekday = weekDay;
+        const newId = `${selectedDay}-${monthName[selectedMonth]}`;
 
         if (id === newId) {
-            handleBackMenu(data);
+            handleBackMenu();
+            handleShowToDos({ items, selectedMonth }, true);
         } else {
-            if (id !== 'Daily') {
-                document.querySelector('.selected-day').classList.remove('selected-day');
+            const options = {
+                newId,
+                title: `${weekDay} - ${selectedDay} de ${monthName[selectedMonth]}`,
+                legend: 'Suas tarefas:',
+                weekDay,
+                selectedDay,
             };
-            document.getElementById(selectedDay).classList.add('selected-day');
 
+            if (id !== 'Daily') document.querySelector('.selected-day')
+                .classList.remove('selected-day');
+
+            render.setSelectedDay(options);
             handleShowToDos({ items, selectedMonth });
-            returnButton.style.display = 'initial';
         };
 
     };
 
     const returnToDaily = () => {
+        const returnButton = document.querySelector('.return-to-daily');
+        const returnButtonImg = document.querySelector('.button-img');
+
         const back = () => {
             const returnDiv = document.querySelector('.return-to-daily');
 
@@ -184,13 +144,16 @@ export default function Menu() {
         };
 
         const daily = data => {
-            handleBackMenu(data);
+            handleBackMenu();
+            handleShowToDos(data, true);
         };
 
         const close = data => {
-            handleBackMenu(data);
+            handleBackMenu();
             menuElement.classList.remove('on');
             document.body.style.overflow = 'initial';
+
+            handleShowToDos(data, true);
         };
 
         return {

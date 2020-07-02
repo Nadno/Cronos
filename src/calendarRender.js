@@ -10,25 +10,24 @@ const beforeThisMonth = (first, totalDays) => {
     };
 };
 
-const setClass = ({ saveDay, saveEvent }, liDay, li, calendar, selectedDay, selectedMonth) => {
-    const { day } = calendar;
+const setClass = ({ saveDay, saveEvent }, liDay, li, selectedDay) => {
     let indexDay;
 
-    if (saveDay !== undefined && saveDay.length >= 0) indexDay = saveDay.indexOf(liDay);
+    if (saveDay) indexDay = saveDay.indexOf(liDay);
 
     if (liDay === selectedDay) li.classList.add('selected-day');
 
     if (indexDay >= 0) {
         li.dataset.indexday = indexDay;
 
-        if (saveEvent !== undefined && saveEvent.indexOf(liDay) >= 0) {
+        if (saveEvent && (saveEvent.indexOf(liDay) >= 0)) {
             li.title = 'há tarefas e eventos para este dia';
             li.classList.add('has-todo-and-event');
         } else {
             li.title = 'há tarefas para este dia';
             li.classList.add('has-todo');
         };
-    } else if (saveEvent !== undefined && saveEvent.indexOf(liDay) >= 0) {
+    } else if (saveEvent && (saveEvent.indexOf(liDay) >= 0)) {
         li.title = 'há tarefas e eventos para este dia';
         li.classList.add('has-event');
     };
@@ -78,7 +77,7 @@ export default function calendarRender(calendar, itemsIndex) {
             li.title = 'Hoje';
         };
 
-        li = setClass(itemsIndex, liDay, li, calendar, selectedDay, selectedMonth);
+        li = setClass(itemsIndex, liDay, li, selectedDay);
         li.dataset.weekday = days[indexWeekDay];
         document.querySelector('ul.month-days').appendChild(li);
 

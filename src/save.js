@@ -40,7 +40,7 @@ const parseJson = save => {
     };
 };
 
-export const getData = (firstCall = false) => {
+export const getData = firstCall => {
     const itemsController = ItemsController();
     let calendar = calendarGenerator();
 
@@ -75,7 +75,7 @@ export const getData = (firstCall = false) => {
 
         itemsController.dailyReset({ items, calendar, selectedMonth });
 
-        if (Days.length > 0) saveDay = Days.map(item => item.Day);
+        if (Days) saveDay = Days.map(item => item.Day);
 
         const index = items.Location.EventsOnMonths.indexOf(selectedMonth);
         const data = {
@@ -87,8 +87,8 @@ export const getData = (firstCall = false) => {
 
         if (index >= 0) {
             const events = items.Months[selectedMonth].Events.map(item => item.day);
-
-            saveEvent = [...new Set(events)];
+    
+            if(events) saveEvent = [...new Set(events)];
 
             calendarRender(calendar, { saveDay, saveEvent })
         } else {
